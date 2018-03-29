@@ -1,0 +1,25 @@
+.nav-button {
+  width: 100%;
+  text-align: left;
+}
+
+.form {
+  width: auto;
+  margin: 40px auto 15px auto;
+}
+
+.form_button {
+  text-align: center;
+}
+
+.required {
+  color: #ff0000;
+}
+
+.required::before {
+  content: "\00a0";
+}
+
+.login_error {
+  color: #ff0000;
+}

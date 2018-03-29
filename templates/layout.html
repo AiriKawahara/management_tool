@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{ title }} | MANAGEMENT TOOL</title>
+    <link rel="stylesheet" href="/static/css/material-icons.css">
+    <link rel="stylesheet" href="/static/css/material.indigo-pink.min.css">
+    <link rel="stylesheet" href="/static/css/flatpickr.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+  </head>
+  <body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title">MANAGEMENT TOOL</span>
+        </div>
+      </header>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title"></span>
+        <nav class="mdl-navigation">
+          <a herf="/schedule">
+            <button type="button" class="mdl-button nav-button">SCHEDULE</button>
+          </a>
+          <a herf="/treated">
+            <button type="button" class="mdl-button nav-button">TREATED</button>
+          </a>
+          <a herf="/training">
+            <button type="button" class="mdl-button nav-button">TRAINING</button>
+          </a>
+          <a herf="/logout">
+            <button type="button" class="mdl-button nav-button">LOGOUT</button>
+          </a>
+        </nav>
+      </div>
+      <main class="mdl-layout__content">
+        <div class="page-content">
+          {% block content %}
+          {% endblock %}
+        </div>
+      </main>
+    </div>
+    <script src="/static/js/material.min.js"></script>
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/js/flatpickr.js"></script>
+    <script src="/static/js/common.js"></script>
+  </body>
+</html>

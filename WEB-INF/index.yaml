@@ -1,0 +1,27 @@
+indexes:
+
+- kind: users
+  properties:
+  - name: login_id
+  - name: password
+
+- kind: auth
+  properties:
+  - name: login_id
+  - name: token
+  - name: expiration_datetime
+
+- kind: schedule
+  properties:
+  - name: schedule_name
+  - name: schedule_date
+
+- kind: treated
+  properties:
+  - name: treated_name
+  - name: treated_date
+
+- kind: training
+  properties:
+  - name: training_name
+  - name: training_date
