@@ -14,14 +14,17 @@ indexes:
 - kind: schedule
   properties:
   - name: schedule_name
-  - name: schedule_date
+  - name: deadline
 
 - kind: treated
   properties:
   - name: treated_name
   - name: treated_date
+  - name: deadline
 
 - kind: training
   properties:
   - name: training_name
   - name: training_date
+  - name: training_count
+  - name: training_time

@@ -16,7 +16,10 @@ def top():
   if authentication_check():
     return redirect('/schedule')
   else:
-    return render_template('login.html', title='ログイン', login=True, error=False)
+    return render_template(
+      'login.html',
+      title='ログイン',
+      login=True, error=False)
 
 # ログイン処理
 @app.route('/login', methods=['POST'])
@@ -36,7 +39,11 @@ def login_failed():
   if authentication_check():
     return redirect('/schedule')
   else:
-    return render_template('login.html', title='ログイン', login=True, error=True)
+    return render_template(
+      'login.html',
+      title='ログイン',
+      login=True,
+      error=True)
 
 # ログアウト処理
 @app.route('/logout')
@@ -45,13 +52,64 @@ def logout():
     session.pop('login_token', None)
   return redirect('/')
 
-# 計画画面
-@app.route('/schedule')
+# タスク管理画面
+@app.route('/schedule', methods=['GET'])
 def schedule():
-  if authentication_check():
-    return render_template('schedule.html', title='計画')
-  else:
+  if not authentication_check():
     return redirect('/')
+
+  # 今日の日付を取得
+  today = (datetime.now(JST)).strftime("%Y-%m-%d")
+
+  # 検索対象日の取得
+  if request.args.get('start_date_input', default=None):
+    start_date = request.args.get('start_date_input', default=None)
+  else:
+    start_date = today
+  
+  if request.args.get('end_date_input', default=None):
+    end_date = request.args.get('end_date_input', default=None)
+  else:
+    end_date = (datetime.now(JST) + timedelta(days=+7)).strftime("%Y-%m-%d")
+  
+  try:
+    # すべてのタスクを取得
+    query = CLIENT.query(kind='schedule')
+    all_tasks = list(query.fetch())
+
+    expired_tasks = get_expired_tasks(all_tasks, today)
+    danger_tasks = get_danger_tasks(all_tasks, today)
+    other_tasks = get_other_tasks(all_tasks, today)
+    search_tasks = get_search_tasks(all_tasks, start_date, end_date)
+    
+    return render_template(
+      'schedule.html',
+      title='タスク管理',
+      expired_tasks=expired_tasks,
+      danger_tasks=danger_tasks,
+      other_tasks=other_tasks,
+      search_tasks=search_tasks)
+  except:
+    print("Unexpected error:" + sys.exc_info()[0])
+    raise
+
+# 計画登録
+@app.route('/schedule_register', methods=['POST'])
+def schedule_register():
+  schedule_name = request.form['schedule_name_input']
+  deadline = request.form['deadline_input']
+  try:
+    key = CLIENT.key('schedule')
+    task = datastore.Entity(key)
+    task.update({
+      'schedule_name': schedule_name,
+      'deadline': deadline
+    })
+    CLIENT.put(task)
+    return redirect('/schedule')
+  except:
+    print("Unexpected error:" + sys.exc_info()[0])
+    raise
 
 # 実績画面
 @app.route('/treated')
@@ -74,10 +132,10 @@ def user_exists(login_id, password):
   # 入力されたパスワードを暗号化
   encode_password = password.encode('utf-8')
   hashed_password = hashlib.sha256(encode_password).hexdigest()
-  query = CLIENT.query(kind='users')
-  query.add_filter('login_id', '=', login_id)
-  query.add_filter('password', '=', hashed_password)
   try:
+    query = CLIENT.query(kind='users')
+    query.add_filter('login_id', '=', login_id)
+    query.add_filter('password', '=', hashed_password)
     users = list(query.fetch())
     if len(users) == 0:
       return False
@@ -120,9 +178,9 @@ def authentication_check():
   # セッションに保存されているトークンが有効かどうか確認
   delete_token()
   login_token = session['login_token']
-  query = CLIENT.query(kind='auth')
-  query.add_filter('token', '=', login_token)
   try:
+    query = CLIENT.query(kind='auth')
+    query.add_filter('token', '=', login_token)
     results = list(query.fetch())
     if len(results) == 0:
       return False
@@ -135,9 +193,9 @@ def authentication_check():
 # 有効期限切れのトークンをDatastoreから削除
 def delete_token():
   now = datetime.now(JST)
-  query = CLIENT.query(kind='auth')
-  query.add_filter('expiration_datetime', '<', now)
   try:
+    query = CLIENT.query(kind='auth')
+    query.add_filter('expiration_datetime', '<', now)
     targets = list(query.fetch())
     for target in targets:
       key = target.__dict__['key']
@@ -145,6 +203,38 @@ def delete_token():
   except:
     print("Unexpected error:" + sys.exc_info()[0])
     raise
+
+# 期限切れのタスクを取得
+def get_expired_tasks(all_tasks, today):
+  results = []
+  for task in all_tasks:
+    if task['deadline'] < today:
+      results.append(task)
+  return results
+
+# 今日までのタスクを取得
+def get_danger_tasks(all_tasks, today):
+  results = []
+  for task in all_tasks:
+    if task['deadline'] == today:
+      results.append(task)
+  return results
+
+# 期日が今日以降のタスクを取得
+def get_other_tasks(all_tasks, today):
+  results = []
+  for task in all_tasks:
+    if task['deadline'] > today:
+      results.append(task)
+  return results
+
+# 検索範囲内のタスクを取得
+def get_search_tasks(all_tasks, start_date, end_date):
+  results = []
+  for task in all_tasks:
+    if task['deadline'] >= start_date and task['deadline'] <= end_date:
+      results.append(task)
+  return results
 
 if __name__ == '__main__':
   app.secret_key = 'some secret key'

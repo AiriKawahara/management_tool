@@ -1,5 +1,73 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
+  <div style="margin: 0 20px;">
+    <h4>登録</h4>
+    <form action="schedule_register" method="post">
+      <table style="margin: 0 auto;">
+        <tbody>
+          <tr>
+            <td class="black">名前<span class="required">*</span></td>
+            <td class="black">
+              <div class="mdl-textfield mdl-js-textfield">
+                <input type="text" class="mdl-textfield__input" name="schedule_name_input" id="schedule_name_input" required>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="black">期日<span class="required">*</span></td>
+            <td class="black">
+              <div class="mdl-textfield mdl-js-textfield">
+                <input type="text" class="mdl-textfield__input register flatpickr-input" name="deadline_input" id="deadline_input" readonly>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="form_button">
+        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">登録</button>
+      </div>
+    </form>
+    <h4>検索</h4>
+    <form action="schedule" method="get">
+      <table style="margin: 0 auto;">
+        <tbody>
+          <tr>
+            <td>
+              <div class="mdl-textfield mdl-js-textfield" style="width: 150px;">
+                <input type="text" class="mdl-textfield__input start_date flatpickr-input" name="start_date_input" id="start_date_input" readonly>
+              </div>
+            </td>
+            <td>
+              <div class="mdl-textfield mdl-js-textfield" style="width: 150px;">
+                <input type="text" class="mdl-textfield__input end_date flatpickr-input" name="end_date_input" id="end_date_input" readonly>
+              </div>
+            </td>
+            <td>
+              <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">検索</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+    <h4>閲覧</h4>
+    <h6>期限切れタスク</h6>
+    {% if expired_tasks|length != 0 %}
+    <table>
+      <thead>
+        <tr>
+          <th>タスク名</th>
+          <th>期日</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    {% endif %}
+    <h6>本日までのタスク</h6>
+    <h6>全タスク</h6>
+  </div>
 {% endblock %}
