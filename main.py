@@ -16,7 +16,7 @@ def top():
   if authentication_check():
     return redirect('/schedule')
   else:
-    return render_template('login.html', title='LOGIN', error=False)
+    return render_template('login.html', title='ログイン', login=True, error=False)
 
 # ログイン処理
 @app.route('/login', methods=['POST'])
@@ -33,7 +33,10 @@ def login():
 # ログインエラーの場合は再度ログイン画面を表示
 @app.route('/login')
 def login_failed():
-  return render_template('login.html', title='LOGIN', error=True)
+  if authentication_check():
+    return redirect('/schedule')
+  else:
+    return render_template('login.html', title='ログイン', login=True, error=True)
 
 # ログアウト処理
 @app.route('/logout')
@@ -42,11 +45,27 @@ def logout():
     session.pop('login_token', None)
   return redirect('/')
 
-# スケジュール画面
+# 計画画面
 @app.route('/schedule')
 def schedule():
   if authentication_check():
-    return render_template('schedule.html', title='SCHEDULE')
+    return render_template('schedule.html', title='計画')
+  else:
+    return redirect('/')
+
+# 実績画面
+@app.route('/treated')
+def treated():
+  if authentication_check():
+    return render_template('treated.html', title='実績')
+  else:
+    return redirect('/')
+
+# トレーニング画面
+@app.route('/training')
+def training():
+  if authentication_check():
+    return render_template('training.html', title='トレーニング')
   else:
     return redirect('/')
 
