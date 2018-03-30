@@ -14,7 +14,7 @@ JST = timezone(timedelta(hours=+9), 'JST')
 @app.route('/')
 def top():
   if authentication_check():
-    return redirect('/schedule')
+    return redirect('/task')
   else:
     return render_template(
       'login.html',
@@ -29,7 +29,7 @@ def login():
   login_check = user_exists(login_id, password)
 
   if login_check:
-    return redirect('/schedule')
+    return redirect('/task')
   else:
     return redirect('/login')
 
@@ -37,7 +37,7 @@ def login():
 @app.route('/login')
 def login_failed():
   if authentication_check():
-    return redirect('/schedule')
+    return redirect('/task')
   else:
     return render_template(
       'login.html',
@@ -53,8 +53,8 @@ def logout():
   return redirect('/')
 
 # タスク管理画面
-@app.route('/schedule', methods=['GET'])
-def schedule():
+@app.route('/task', methods=['GET'])
+def task():
   if not authentication_check():
     return redirect('/')
 
@@ -74,7 +74,7 @@ def schedule():
   
   try:
     # すべてのタスクを取得
-    query = CLIENT.query(kind='schedule')
+    query = CLIENT.query(kind='task')
     all_tasks = list(query.fetch())
 
     expired_tasks = get_expired_tasks(all_tasks, today)
@@ -83,7 +83,7 @@ def schedule():
     search_tasks = get_search_tasks(all_tasks, start_date, end_date)
     
     return render_template(
-      'schedule.html',
+      'task.html',
       title='タスク管理',
       expired_tasks=expired_tasks,
       danger_tasks=danger_tasks,
@@ -94,19 +94,19 @@ def schedule():
     raise
 
 # 計画登録
-@app.route('/schedule_register', methods=['POST'])
-def schedule_register():
-  schedule_name = request.form['schedule_name_input']
+@app.route('/task_register', methods=['POST'])
+def task_register():
+  task_name = request.form['task_name_input']
   deadline = request.form['deadline_input']
   try:
-    key = CLIENT.key('schedule')
+    key = CLIENT.key('task')
     task = datastore.Entity(key)
     task.update({
-      'schedule_name': schedule_name,
+      'task_name': task_name,
       'deadline': deadline
     })
     CLIENT.put(task)
-    return redirect('/schedule')
+    return redirect('/task')
   except:
     print("Unexpected error:" + sys.exc_info()[0])
     raise

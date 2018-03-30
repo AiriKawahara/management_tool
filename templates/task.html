@@ -3,14 +3,14 @@
 {% block content %}
   <div style="margin: 0 20px;">
     <h4>登録</h4>
-    <form action="schedule_register" method="post">
+    <form action="task_register" method="post">
       <table style="margin: 0 auto;">
         <tbody>
           <tr>
             <td class="black">名前<span class="required">*</span></td>
             <td class="black">
               <div class="mdl-textfield mdl-js-textfield">
-                <input type="text" class="mdl-textfield__input" name="schedule_name_input" id="schedule_name_input" required>
+                <input type="text" class="mdl-textfield__input" name="task_name_input" id="task_name_input" required>
               </div>
             </td>
           </tr>
@@ -29,7 +29,7 @@
       </div>
     </form>
     <h4>検索</h4>
-    <form action="schedule" method="get">
+    <form action="task" method="get">
       <table style="margin: 0 auto;">
         <tbody>
           <tr>

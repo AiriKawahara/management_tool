@@ -11,9 +11,9 @@ indexes:
   - name: token
   - name: expiration_datetime
 
-- kind: schedule
+- kind: task
   properties:
-  - name: schedule_name
+  - name: task_name
   - name: deadline
 
 - kind: treated
