@@ -62,40 +62,38 @@ def task():
   today = (datetime.now(JST)).strftime("%Y-%m-%d")
 
   # 検索対象日の取得
-  if request.args.get('start_date_input', default=None):
-    start_date = request.args.get('start_date_input', default=None)
-  else:
-    start_date = today
-  
-  if request.args.get('end_date_input', default=None):
-    end_date = request.args.get('end_date_input', default=None)
-  else:
-    end_date = (datetime.now(JST) + timedelta(days=+7)).strftime("%Y-%m-%d")
-  
+  start_date = request.args.get('start_date_input', default=None)
+  end_date = request.args.get('end_date_input', default=None)
+
   try:
     # すべてのタスクを取得
     query = CLIENT.query(kind='task')
     all_tasks = list(query.fetch())
 
+    everyday_tasks = get_everyday_tasks(all_tasks)
     expired_tasks = get_expired_tasks(all_tasks, today)
     danger_tasks = get_danger_tasks(all_tasks, today)
     other_tasks = get_other_tasks(all_tasks, today)
-    search_tasks = get_search_tasks(all_tasks, start_date, end_date)
-    
+    if start_date and end_date:
+      search_tasks = get_search_tasks(all_tasks, start_date, end_date)
+    else:
+      search_tasks = []
+
     return render_template(
       'task.html',
       title='タスク管理',
+      everyday_tasks=everyday_tasks,
       expired_tasks=expired_tasks,
       danger_tasks=danger_tasks,
       other_tasks=other_tasks,
       search_tasks=search_tasks)
   except:
-    print("Unexpected error:" + sys.exc_info()[0])
+    print("Unexpected error")
     raise
 
 # 計画登録
-@app.route('/task_register', methods=['POST'])
-def task_register():
+@app.route('/register_task', methods=['POST'])
+def register_task():
   task_name = request.form['task_name_input']
   deadline = request.form['deadline_input']
   try:
@@ -108,8 +106,15 @@ def task_register():
     CLIENT.put(task)
     return redirect('/task')
   except:
-    print("Unexpected error:" + sys.exc_info()[0])
+    print("Unexpected error")
     raise
+
+# 計画完了
+@app.route('/complete_task', methods=['POST'])
+def complete_task():
+  print('aaa')
+
+# 計画削除
 
 # 実績画面
 @app.route('/treated')
@@ -167,7 +172,7 @@ def user_exists(login_id, password):
       session['login_token'] = token
       return True
   except:
-    print("Unexpected error:" + sys.exc_info()[0])
+    print("Unexpected error")
     raise
 
 # 認証チェックを行う
@@ -187,7 +192,7 @@ def authentication_check():
     else:
       return True
   except:
-    print("Unexpected error:" + sys.exc_info()[0])
+    print("Unexpected error")
     raise
 
 # 有効期限切れのトークンをDatastoreから削除
@@ -201,8 +206,17 @@ def delete_token():
       key = target.__dict__['key']
       CLIENT.delete(key)
   except:
-    print("Unexpected error:" + sys.exc_info()[0])
+    print("Unexpected error")
     raise
+
+# 毎日のタスクを取得
+def get_everyday_tasks(all_tasks):
+  const_day = '2099-12-31'
+  results = []
+  for task in all_tasks:
+    if task['deadline'] == const_day:
+      results.append(task)
+  return results
 
 # 期限切れのタスクを取得
 def get_expired_tasks(all_tasks, today):

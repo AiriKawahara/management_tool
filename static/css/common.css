@@ -2,6 +2,10 @@ td {
   padding: 0 10px;
 }
 
+h4 {
+  margin-bottom: 0;
+}
+
 .nav-button {
   width: 100%;
   text-align: left;
@@ -16,6 +20,10 @@ td {
   text-align: center;
 }
 
+.center_table {
+  margin: 0 auto;
+}
+
 .required {
   color: #ff0000;
 }
@@ -26,4 +34,8 @@ td {
 
 .login_error {
   color: #ff0000;
+}
+
+#everyday, #reset {
+  margin-left: 10px;
 }

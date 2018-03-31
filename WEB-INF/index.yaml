@@ -18,7 +18,7 @@ indexes:
 
 - kind: treated
   properties:
-  - name: treated_name
+  - name: task_name
   - name: treated_date
   - name: deadline
 

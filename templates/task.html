@@ -3,23 +3,31 @@
 {% block content %}
   <div style="margin: 0 20px;">
     <h4>登録</h4>
-    <form action="task_register" method="post">
-      <table style="margin: 0 auto;">
+    <form action="register_task" method="post">
+      <table class="center_table">
         <tbody>
           <tr>
-            <td class="black">名前<span class="required">*</span></td>
-            <td class="black">
+            <td style="text-align: right;">
+              <span>タスク名</span>
+              <span class="required">*</span>
+            </td>
+            <td>
               <div class="mdl-textfield mdl-js-textfield">
                 <input type="text" class="mdl-textfield__input" name="task_name_input" id="task_name_input" required>
               </div>
             </td>
           </tr>
           <tr>
-            <td class="black">期日<span class="required">*</span></td>
-            <td class="black">
-              <div class="mdl-textfield mdl-js-textfield">
+            <td style="text-align: right;">
+              <span>期日</span>
+              <span class="required">*</span>
+            </td>
+            <td>
+              <div class="mdl-textfield mdl-js-textfield" style="width: 120px;">
                 <input type="text" class="mdl-textfield__input register flatpickr-input" name="deadline_input" id="deadline_input" readonly>
               </div>
+              <button type="button" id="everyday" class="mdl-button mdl-js-button mdl-button--raised">毎日</button>
+              <button type="button" id="reset" class="mdl-button mdl-js-button mdl-button--raised">リセット</button>
             </td>
           </tr>
         </tbody>
@@ -28,9 +36,99 @@
         <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">登録</button>
       </div>
     </form>
+
+    <h4>閲覧</h4>
+    <h6>毎日のタスク</h6>
+    {% if everyday_tasks|length != 0 %}
+    <table class="center_table">
+      <thead>
+        <tr>
+          <th>タスク名</th>
+          <th>期日</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in everyday_tasks %}
+        <tr>
+          <td>{{ task.task_name }}</td>
+          <td></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <span>なし</span>
+    {% endif %}
+
+    <h6>期限切れタスク</h6>
+    {% if expired_tasks|length != 0 %}
+    <table class="mdl-data-table mdl-js-data-table center_table">
+      <thead>
+        <tr>
+          <th>タスク名</th>
+          <th>期日</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in expired_tasks %}
+        <tr style="color: #ff0000">
+          <td>{{ task.task_name }}</td>
+          <td></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <span>なし</span>
+    {% endif %}
+
+    <h6>本日までのタスク</h6>
+    {% if danger_tasks|length != 0 %}
+    <table class="mdl-data-table mdl-js-data-table center_table">
+      <thead>
+        <tr>
+          <th>タスク名</th>
+          <th>期日</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in danger_tasks %}
+        <tr style="color: #ffa500">
+          <td>{{ task.task_name }}</td>
+          <td></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <span>なし</span>
+    {% endif %}
+
+    <h6>全タスク</h6>
+    {% if other_tasks|length != 0 %}
+    <table class="mdl-data-table mdl-js-data-table center_table">
+      <thead>
+        <tr>
+          <th>タスク名</th>
+          <th>期日</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in other_tasks %}
+        <tr>
+          <td>{{ task.task_name }}</td>
+          <td></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <span>なし</span>
+    {% endif %}
+
     <h4>検索</h4>
     <form action="task" method="get">
-      <table style="margin: 0 auto;">
+      <table class="center_table">
         <tbody>
           <tr>
             <td>
@@ -50,24 +148,5 @@
         </tbody>
       </table>
     </form>
-    <h4>閲覧</h4>
-    <h6>期限切れタスク</h6>
-    {% if expired_tasks|length != 0 %}
-    <table>
-      <thead>
-        <tr>
-          <th>タスク名</th>
-          <th>期日</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
-    {% endif %}
-    <h6>本日までのタスク</h6>
-    <h6>全タスク</h6>
   </div>
 {% endblock %}

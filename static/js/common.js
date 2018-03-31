@@ -19,6 +19,14 @@ $(function(){
     defaultDate: getDate(7)
   });
 
+  $('#everyday').click(function() {
+    $('#deadline_input').val('2099-12-31');
+  });
+
+  $('#reset').click(function() {
+    $('#deadline_input').val(getDate());
+  });
+
   setInputValue();
 });
 
