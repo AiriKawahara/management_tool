@@ -6,6 +6,7 @@ import random
 import string
 
 app = Flask(__name__)
+app.secret_key = 'some secret key'
 
 CLIENT = datastore.Client('management-tool-y')
 JST = timezone(timedelta(hours=+9), 'JST')
@@ -251,5 +252,4 @@ def get_search_tasks(all_tasks, start_date, end_date):
   return results
 
 if __name__ == '__main__':
-  app.secret_key = 'some secret key'
   app.run(host='0.0.0.0')
