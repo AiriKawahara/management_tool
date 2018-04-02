@@ -113,9 +113,36 @@ def register_task():
 # 計画完了
 @app.route('/complete_task', methods=['POST'])
 def complete_task():
-  print('aaa')
+  task_name = request.form['task_name']
+  deadline = request.form['deadline']
+  today = (datetime.now(JST)).strftime("%Y-%m-%d")
+
+  try:
+    # 実績登録
+    key = CLIENT.key('treated')
+    task = datastore.Entity(key)
+    task.update({
+      'task_name': task_name,
+      'treated_date': today,
+      'deadline': deadline
+    })
+    CLIENT.put(task)
+    
+    # 計画削除
+    query = CLIENT.query(kind='task')
+    query.add_filter('task_name', '=', task_name)
+    query.add_filter('deadline', '=', deadline)
+    target = list(query.fetch())
+    key = target[0].__dict__['key']
+    CLIENT.delete(key)
+  except:
+    print("Unexpected error")
+    raise
 
 # 計画削除
+@app.route('/delete_task', methods=['POST'])
+def delete_task():
+  print('aaa')
 
 # 実績画面
 @app.route('/treated')
@@ -237,9 +264,10 @@ def get_danger_tasks(all_tasks, today):
 
 # 期日が今日以降のタスクを取得
 def get_other_tasks(all_tasks, today):
+  const_day = '2099-12-31'
   results = []
   for task in all_tasks:
-    if task['deadline'] > today:
+    if task['deadline'] > today and task['deadline'] != const_day:
       results.append(task)
   return results
 
@@ -252,4 +280,4 @@ def get_search_tasks(all_tasks, start_date, end_date):
   return results
 
 if __name__ == '__main__':
-  app.run(host='0.0.0.0')
+  app.run(host='0.0.0.0', port=8000)

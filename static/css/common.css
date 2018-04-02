@@ -39,3 +39,7 @@ h4 {
 #everyday, #reset {
   margin-left: 10px;
 }
+
+.left_table th, .left_table td {
+  text-align: left;
+}

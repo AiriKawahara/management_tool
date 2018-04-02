@@ -40,18 +40,20 @@
     <h4>閲覧</h4>
     <h6>毎日のタスク</h6>
     {% if everyday_tasks|length != 0 %}
-    <table class="mdl-data-table mdl-js-data-table center_table">
+    <table class="mdl-data-table mdl-js-data-table center_table left_table">
       <thead>
         <tr>
           <th>タスク名</th>
-          <th>期日</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         {% for task in everyday_tasks %}
         <tr>
           <td>{{ task.task_name }}</td>
-          <td></td>
+          <td>完了</td>
+          <td>削除</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -62,18 +64,20 @@
 
     <h6>期限切れタスク</h6>
     {% if expired_tasks|length != 0 %}
-    <table class="mdl-data-table mdl-js-data-table center_table">
+    <table class="mdl-data-table mdl-js-data-table center_table left_table">
       <thead>
         <tr>
           <th>タスク名</th>
-          <th>期日</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         {% for task in expired_tasks %}
         <tr style="color: #ff0000">
           <td>{{ task.task_name }}</td>
-          <td></td>
+          <td>完了</td>
+          <td>削除</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -84,18 +88,26 @@
 
     <h6>本日までのタスク</h6>
     {% if danger_tasks|length != 0 %}
-    <table class="mdl-data-table mdl-js-data-table center_table">
+    <table class="mdl-data-table mdl-js-data-table center_table left_table">
       <thead>
         <tr>
           <th>タスク名</th>
-          <th>期日</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         {% for task in danger_tasks %}
         <tr style="color: #ffa500">
           <td>{{ task.task_name }}</td>
-          <td></td>
+          <td>
+            <form action="complete_task" method="post">
+              <input type="hidden" name="task_name" value="{{ task.task_name }}">
+              <input type="hidden" name="deadline" value="{{ task.deadline }}">
+            </form>
+            完了
+          </td>
+          <td>削除</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -106,18 +118,22 @@
 
     <h6>全タスク</h6>
     {% if other_tasks|length != 0 %}
-    <table class="mdl-data-table mdl-js-data-table center_table">
+    <table class="mdl-data-table mdl-js-data-table center_table left_table">
       <thead>
         <tr>
           <th>タスク名</th>
           <th>期日</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         {% for task in other_tasks %}
         <tr>
           <td>{{ task.task_name }}</td>
-          <td></td>
+          <td>{{ task.deadline }}</td>
+          <td>完了</td>
+          <td>削除</td>
         </tr>
         {% endfor %}
       </tbody>
