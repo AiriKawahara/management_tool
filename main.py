@@ -135,6 +135,7 @@ def complete_task():
     target = list(query.fetch())
     key = target[0].__dict__['key']
     CLIENT.delete(key)
+    return redirect('/task')
   except:
     print("Unexpected error")
     raise

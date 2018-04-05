@@ -45,14 +45,12 @@
         <tr>
           <th>タスク名</th>
           <th></th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
         {% for task in everyday_tasks %}
         <tr>
           <td>{{ task.task_name }}</td>
-          <td>完了</td>
           <td>削除</td>
         </tr>
         {% endfor %}
@@ -76,7 +74,13 @@
         {% for task in expired_tasks %}
         <tr style="color: #ff0000">
           <td>{{ task.task_name }}</td>
-          <td>完了</td>
+          <td>
+            <form action="complete_task" method="post">
+              <input type="hidden" name="task_name" value="{{ task.task_name }}">
+              <input type="hidden" name="deadline" value="{{ task.deadline }}">
+              <button type="submit" class="mdl-button mdl-js-button mdl-button--raised">完了</button>
+            </form>
+          </td>
           <td>削除</td>
         </tr>
         {% endfor %}
@@ -104,8 +108,8 @@
             <form action="complete_task" method="post">
               <input type="hidden" name="task_name" value="{{ task.task_name }}">
               <input type="hidden" name="deadline" value="{{ task.deadline }}">
+              <button type="submit" class="mdl-button mdl-js-button mdl-button--raised">完了</button>
             </form>
-            完了
           </td>
           <td>削除</td>
         </tr>
@@ -132,7 +136,13 @@
         <tr>
           <td>{{ task.task_name }}</td>
           <td>{{ task.deadline }}</td>
-          <td>完了</td>
+          <td>
+            <form action="complete_task" method="post">
+              <input type="hidden" name="task_name" value="{{ task.task_name }}">
+              <input type="hidden" name="deadline" value="{{ task.deadline }}">
+              <button type="submit" class="mdl-button mdl-js-button mdl-button--raised">完了</button>
+            </form>
+          </td>
           <td>削除</td>
         </tr>
         {% endfor %}
