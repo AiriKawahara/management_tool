@@ -75,11 +75,9 @@
         <tr style="color: #ff0000">
           <td>{{ task.task_name }}</td>
           <td>
-            <form action="complete_task" method="post">
-              <input type="hidden" name="task_name" value="{{ task.task_name }}">
-              <input type="hidden" name="deadline" value="{{ task.deadline }}">
-              <button type="submit" class="mdl-button mdl-js-button mdl-button--raised">完了</button>
-            </form>
+            <button type="button" class="mdl-button mdl-js-button mdl-button--raised complete" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+              <i class="material-icons">done</i>
+            </button>
           </td>
           <td>削除</td>
         </tr>
@@ -105,11 +103,9 @@
         <tr style="color: #ffa500">
           <td>{{ task.task_name }}</td>
           <td>
-            <form action="complete_task" method="post">
-              <input type="hidden" name="task_name" value="{{ task.task_name }}">
-              <input type="hidden" name="deadline" value="{{ task.deadline }}">
-              <button type="submit" class="mdl-button mdl-js-button mdl-button--raised">完了</button>
-            </form>
+            <button type="button" class="mdl-button mdl-js-button mdl-button--raised complete" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+              <i class="material-icons">done</i>
+            </button>
           </td>
           <td>削除</td>
         </tr>
@@ -137,11 +133,9 @@
           <td>{{ task.task_name }}</td>
           <td>{{ task.deadline }}</td>
           <td>
-            <form action="complete_task" method="post">
-              <input type="hidden" name="task_name" value="{{ task.task_name }}">
-              <input type="hidden" name="deadline" value="{{ task.deadline }}">
-              <button type="submit" class="mdl-button mdl-js-button mdl-button--raised">完了</button>
-            </form>
+            <button type="button" class="mdl-button mdl-js-button mdl-button--raised complete" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+              <i class="material-icons">done</i>
+            </button>
           </td>
           <td>削除</td>
         </tr>
@@ -175,4 +169,10 @@
       </table>
     </form>
   </div>
+
+  <!-- タスク編集ダイアログ -->
+  
+
+  <!-- タスク完了ダイアログ -->
+  
 {% endblock %}

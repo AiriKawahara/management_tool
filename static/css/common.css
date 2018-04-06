@@ -43,3 +43,7 @@ h4 {
 .left_table th, .left_table td {
   text-align: left;
 }
+
+.mdl-textfield {
+  width: auto;
+}

@@ -31,7 +31,7 @@ $(function(){
 });
 
 /**
- * 今日からdays日後の日付を取得する
+ * 今日からdays日後の日付を取得する。
  */
 function getDate(days = 0) {
   const date = new Date()
@@ -43,6 +43,9 @@ function getDate(days = 0) {
   return today;
 }
 
+/**
+ * 検索ボックスにURLパラメータの値をセットする。
+ */
 function setInputValue() {
   // URLパラメータを取得
   var arg = new Object;
