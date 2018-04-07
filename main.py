@@ -66,49 +66,41 @@ def task():
   start_date = request.args.get('start_date_input', default=None)
   end_date = request.args.get('end_date_input', default=None)
 
-  try:
-    # すべてのタスクを取得
-    query = CLIENT.query(kind='task')
-    all_tasks = list(query.fetch())
+  # すべてのタスクを取得
+  query = CLIENT.query(kind='task')
+  all_tasks = list(query.fetch())
 
-    everyday_tasks = get_everyday_tasks(all_tasks)
-    expired_tasks = get_expired_tasks(all_tasks, today)
-    danger_tasks = get_danger_tasks(all_tasks, today)
-    other_tasks = get_other_tasks(all_tasks, today)
-    if start_date and end_date:
-      search_tasks = get_search_tasks(all_tasks, start_date, end_date)
-    else:
-      search_tasks = []
+  everyday_tasks = get_everyday_tasks(all_tasks)
+  expired_tasks = get_expired_tasks(all_tasks, today)
+  danger_tasks = get_danger_tasks(all_tasks, today)
+  other_tasks = get_other_tasks(all_tasks, today)
+  if start_date and end_date:
+    search_tasks = get_search_tasks(all_tasks, start_date, end_date)
+  else:
+    search_tasks = []
 
-    return render_template(
-      'task.html',
-      title='タスク管理',
-      everyday_tasks=everyday_tasks,
-      expired_tasks=expired_tasks,
-      danger_tasks=danger_tasks,
-      other_tasks=other_tasks,
-      search_tasks=search_tasks)
-  except:
-    print("Unexpected error")
-    raise
+  return render_template(
+    'task.html',
+    title='タスク管理',
+    everyday_tasks=everyday_tasks,
+    expired_tasks=expired_tasks,
+    danger_tasks=danger_tasks,
+    other_tasks=other_tasks,
+    search_tasks=search_tasks)
 
 # 計画登録
 @app.route('/register_task', methods=['POST'])
 def register_task():
   task_name = request.form['task_name_input']
   deadline = request.form['deadline_input']
-  try:
-    key = CLIENT.key('task')
-    task = datastore.Entity(key)
-    task.update({
-      'task_name': task_name,
-      'deadline': deadline
-    })
-    CLIENT.put(task)
-    return redirect('/task')
-  except:
-    print("Unexpected error")
-    raise
+  key = CLIENT.key('task')
+  task = datastore.Entity(key)
+  task.update({
+    'task_name': task_name,
+    'deadline': deadline
+  })
+  CLIENT.put(task)
+  return redirect('/task')
 
 # 計画完了
 @app.route('/complete_task', methods=['POST'])
@@ -117,28 +109,24 @@ def complete_task():
   deadline = request.form['deadline']
   complete_date = request.form['complete_date']
 
-  try:
-    # 実績登録
-    key = CLIENT.key('treated')
-    task = datastore.Entity(key)
-    task.update({
-      'task_name': task_name,
-      'treated_date': complete_date,
-      'deadline': deadline
-    })
-    CLIENT.put(task)
-    
-    # 計画削除
-    query = CLIENT.query(kind='task')
-    query.add_filter('task_name', '=', task_name)
-    query.add_filter('deadline', '=', deadline)
-    target = list(query.fetch())
-    key = target[0].__dict__['key']
-    CLIENT.delete(key)
-    return redirect('/task')
-  except:
-    print("Unexpected error")
-    raise
+  # 実績登録
+  key = CLIENT.key('treated')
+  task = datastore.Entity(key)
+  task.update({
+    'task_name': task_name,
+    'treated_date': complete_date,
+    'deadline': deadline
+  })
+  CLIENT.put(task)
+
+  # 計画削除
+  query = CLIENT.query(kind='task')
+  query.add_filter('task_name', '=', task_name)
+  query.add_filter('deadline', '=', deadline)
+  target = list(query.fetch())
+  key = target[0].__dict__['key']
+  CLIENT.delete(key)
+  return redirect('/task')
 
 # 計画削除
 @app.route('/delete_task', methods=['POST'])
@@ -166,43 +154,42 @@ def user_exists(login_id, password):
   # 入力されたパスワードを暗号化
   encode_password = password.encode('utf-8')
   hashed_password = hashlib.sha256(encode_password).hexdigest()
-  try:
-    query = CLIENT.query(kind='users')
-    query.add_filter('login_id', '=', login_id)
-    query.add_filter('password', '=', hashed_password)
-    users = list(query.fetch())
-    if len(users) == 0:
+  
+  query = CLIENT.query(kind='users')
+  query.add_filter('login_id', '=', login_id)
+  query.add_filter('password', '=', hashed_password)
+  users = list(query.fetch())
+
+  if len(users) == 0:
+    return False
+  else:
+    # トークンを生成
+    letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    token = ''.join([random.choice(letters) for _ in range(32)])
+    expiration_datetime = datetime.now(JST) + timedelta(days=+1)
+
+    # トークンが既にDatastoreに登録されていないかチェック
+    delete_token()
+    query = CLIENT.query(kind='auth')
+    query.add_filter('token', '=', token)
+    results = list(query.fetch())
+
+    if len(results) != 0:
+      print("Token duplication error")
       return False
-    else:
-      # トークンを生成
-      letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-      token = ''.join([random.choice(letters) for _ in range(32)])
-      expiration_datetime = datetime.now(JST) + timedelta(days=+1)
 
-      # トークンが既にDatastoreに登録されていないかチェック
-      delete_token()
-      query = CLIENT.query(kind='auth')
-      query.add_filter('token', '=', token)
-      results = list(query.fetch())
-      if len(results) != 0:
-        print("Token duplication error")
-        return False
-
-      # トークンを保存(有効期限は24時間)
-      key = CLIENT.key('auth')
-      task = datastore.Entity(key)
-      task.update({
-        'login_id': login_id,
-        'token': token,
-        'expiration_datetime': expiration_datetime
-      })
-      CLIENT.put(task)
-      # セッションにトークンを保存
-      session['login_token'] = token
-      return True
-  except:
-    print("Unexpected error")
-    raise
+    # トークンを保存(有効期限は24時間)
+    key = CLIENT.key('auth')
+    task = datastore.Entity(key)
+    task.update({
+      'login_id': login_id,
+      'token': token,
+      'expiration_datetime': expiration_datetime
+    })
+    CLIENT.put(task)
+    # セッションにトークンを保存
+    session['login_token'] = token
+    return True
 
 # 認証チェックを行う
 def authentication_check():
@@ -212,31 +199,25 @@ def authentication_check():
   # セッションに保存されているトークンが有効かどうか確認
   delete_token()
   login_token = session['login_token']
-  try:
-    query = CLIENT.query(kind='auth')
-    query.add_filter('token', '=', login_token)
-    results = list(query.fetch())
-    if len(results) == 0:
-      return False
-    else:
-      return True
-  except:
-    print("Unexpected error")
-    raise
+  query = CLIENT.query(kind='auth')
+  query.add_filter('token', '=', login_token)
+  results = list(query.fetch())
+
+  if len(results) == 0:
+    return False
+  else:
+    return True
 
 # 有効期限切れのトークンをDatastoreから削除
 def delete_token():
   now = datetime.now(JST)
-  try:
-    query = CLIENT.query(kind='auth')
-    query.add_filter('expiration_datetime', '<', now)
-    targets = list(query.fetch())
-    for target in targets:
-      key = target.__dict__['key']
-      CLIENT.delete(key)
-  except:
-    print("Unexpected error")
-    raise
+  query = CLIENT.query(kind='auth')
+  query.add_filter('expiration_datetime', '<', now)
+  targets = list(query.fetch())
+
+  for target in targets:
+    key = target.__dict__['key']
+    CLIENT.delete(key)
 
 # 毎日のタスクを取得
 def get_everyday_tasks(all_tasks):
