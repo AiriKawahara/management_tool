@@ -76,11 +76,21 @@ def task():
     other_tasks=other_tasks,
     search_tasks=search_tasks)
 
-# 計画登録
+# タスク登録
 @app.route('/register_task', methods=['POST'])
 def register_task():
   task_name = request.form['task_name_input']
   deadline = request.form['deadline_input']
+
+  # すでに同じタスクが登録されている場合は登録しない
+  query = CLIENT.query(kind='task')
+  query.add_filter('task_name', '=', task_name)
+  query.add_filter('deadline', '=', deadline)
+  tasks = list(query.fetch())
+  if len(tasks) > 0:
+    flash('すでにまったく同じタスクが登録されています。')
+    return redirect('/task')
+
   key = CLIENT.key('task')
   task = datastore.Entity(key)
   task.update({
@@ -90,7 +100,7 @@ def register_task():
   CLIENT.put(task)
   return redirect('/task')
 
-# 計画完了
+# タスク完了
 @app.route('/complete_task', methods=['POST'])
 def complete_task():
   task_name = request.form['task_name']
@@ -107,7 +117,7 @@ def complete_task():
   })
   CLIENT.put(task)
 
-  # 計画削除
+  # タスク削除
   query = CLIENT.query(kind='task')
   query.add_filter('task_name', '=', task_name)
   query.add_filter('deadline', '=', deadline)
@@ -116,7 +126,7 @@ def complete_task():
   CLIENT.delete(key)
   return redirect('/task')
 
-# 計画削除
+# タスク削除
 @app.route('/delete_task', methods=['POST'])
 def delete_task():
   print('aaa')

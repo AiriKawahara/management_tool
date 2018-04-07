@@ -6,6 +6,15 @@
   <form action="register_task" method="post">
     <table class="center-table">
       <tbody>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <tr>
+                <td class="error" colspan="2">{{ message }}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
         <tr>
           <td style="text-align: right;">
             <span>タスク名</span>
