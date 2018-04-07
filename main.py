@@ -88,7 +88,7 @@ def register_task():
   query.add_filter('deadline', '=', deadline)
   tasks = list(query.fetch())
   if len(tasks) > 0:
-    flash('すでにまったく同じタスクが登録されています。')
+    flash('すでに同じタスクが登録されています。')
     return redirect('/task')
 
   key = CLIENT.key('task')
@@ -129,7 +129,21 @@ def complete_task():
 # タスク削除
 @app.route('/delete_task', methods=['POST'])
 def delete_task():
-  print('aaa')
+  task_name = request.form['task_name']
+  deadline = request.form['deadline']
+
+  query = CLIENT.query(kind='task')
+  query.add_filter('task_name', '=', task_name)
+  query.add_filter('deadline', '=', deadline)
+  target = list(query.fetch())
+
+  if len(target) == 0:
+    flash('タスクの削除に失敗しました。')
+    return redirect('/task')
+
+  key = target[0].__dict__['key']
+  CLIENT.delete(key)
+  return redirect('/task')
 
 # 実績画面
 @app.route('/treated')

@@ -44,6 +44,10 @@ $(function() {
     controlDialog($(this), 'complete');
   });
 
+  $('.delete').click(function() {
+    controlDialog($(this), 'delete');
+  });
+
   // リサイズされたらダイアログのセンタリングを行う
   $(window).resize(centeringDialogSyncer);
 
@@ -98,6 +102,8 @@ function centeringDialogSyncer() {
   var chEdit = $('.edit-dialog').outerHeight();
   var cwComplete = $('.complete-dialog').outerWidth();
   var chComplete = $('.complete-dialog').outerHeight();
+  var cwDelete = $('.delete-dialog').outerWidth();
+  var chDelete = $('.delete-dialog').outerHeight();
 
   //センタリングを実行する
   $('.edit-dialog').css({
@@ -109,12 +115,17 @@ function centeringDialogSyncer() {
     'left': ((w - cwComplete) / 2) + 'px',
     'top': ((h - chComplete) / 2) + 'px'
   });
+
+  $('.delete-dialog').css({
+    'left': ((w - cwDelete) / 2) + 'px',
+    'top': ((h - chDelete) / 2) + 'px'
+  });
 }
 
 /**
  * タスク完了ダイアログの表示/非表示制御を行う。
  * @param {object} $elem 押下されたボタンのjQueryオブジェクト
- * @param {string} type  タスク編集かタスク完了か
+ * @param {string} type  表示するダイアログの種類
  */
 function controlDialog($elem, type) {
   var taskName = $elem.data('name');
@@ -137,6 +148,12 @@ function controlDialog($elem, type) {
 
   // ダイアログの背景を押下したらダイアログを閉じる
   $('#overlay').unbind().click(function() {
+    $(`.${type}-dialog, #overlay`).hide();
+    $('#overlay').remove();
+  });
+
+  // 削除ダイアログの「いいえ」ボタンを押下したらダイアログを閉じる
+  $('.dialog-close').click(function() {
     $(`.${type}-dialog, #overlay`).hide();
     $('#overlay').remove();
   });

@@ -44,12 +44,24 @@ h4 {
   text-align: left;
 }
 
+.edit, .complete, .delete {
+  padding: 0 10px;
+}
+
+.complete, .delete {
+  margin-left: 10px;
+}
+
 .mdl-textfield {
   width: auto;
 }
 
+.mdl-button {
+  min-width: 0;
+}
+
 /* ダイアログ */
-.edit-dialog, .complete-dialog {
+.edit-dialog, .complete-dialog, .delete-dialog {
   position: fixed;
   display: none;
   width: 300px;
@@ -62,6 +74,10 @@ h4 {
 
 .edit-dialog h4, .complete-dialog h4 {
   margin-top: 0;
+}
+
+.delete-dialog p {
+  padding: 10px 0;
 }
 
 #overlay {
