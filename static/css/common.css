@@ -47,3 +47,33 @@ h4 {
 .mdl-textfield {
   width: auto;
 }
+
+/* ダイアログ */
+.edit-dialog, .complete-dialog {
+  position: fixed;
+  display: none;
+  width: 300px;
+  margin: auto 0;
+  padding: 10px 20px;
+  border: 2px solid #aaa;
+  background: #fff;
+  z-index: 2;
+}
+
+.edit-dialog h4, .complete-dialog h4 {
+  margin-top: 0;
+}
+
+#overlay {
+  z-index: 1;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* SPでスクロールして高さが変わっても
+     全体にオーバーレイを適用させるため120%を指定 */
+  height: 120%;
+  background-color: rgba(0,0,0,0.75);
+}
+/* ダイアログここまで */

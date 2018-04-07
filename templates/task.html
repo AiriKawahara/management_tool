@@ -1,178 +1,219 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <div style="margin: 0 20px;">
-    <h4>登録</h4>
-    <form action="register_task" method="post">
-      <table class="center-table">
-        <tbody>
-          <tr>
-            <td style="text-align: right;">
-              <span>タスク名</span>
-              <span class="required">*</span>
-            </td>
-            <td>
-              <div class="mdl-textfield mdl-js-textfield">
-                <input type="text" class="mdl-textfield__input" name="task_name_input" id="task_name_input" required>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td style="text-align: right;">
-              <span>期日</span>
-              <span class="required">*</span>
-            </td>
-            <td>
-              <div class="mdl-textfield mdl-js-textfield" style="width: 120px;">
-                <input type="text" class="mdl-textfield__input flatpickr-input" name="deadline_input" id="deadline_input" readonly>
-              </div>
-              <button type="button" id="everyday" class="mdl-button mdl-js-button mdl-button--raised">毎日</button>
-              <button type="button" id="reset" class="mdl-button mdl-js-button mdl-button--raised">リセット</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="form-button">
-        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">登録</button>
-      </div>
-    </form>
-
-    <h4>閲覧</h4>
-    <h6>毎日のタスク</h6>
-    {% if everyday_tasks|length != 0 %}
-    <table class="mdl-data-table mdl-js-data-table center-table left-table">
-      <thead>
-        <tr>
-          <th>タスク名</th>
-          <th></th>
-        </tr>
-      </thead>
+<div style="margin: 0 20px;">
+  <h4>登録</h4>
+  <form action="register_task" method="post">
+    <table class="center-table">
       <tbody>
-        {% for task in everyday_tasks %}
         <tr>
-          <td>{{ task.task_name }}</td>
-          <td>削除</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-    <span>なし</span>
-    {% endif %}
-
-    <h6>期限切れタスク</h6>
-    {% if expired_tasks|length != 0 %}
-    <table class="mdl-data-table mdl-js-data-table center-table left-table">
-      <thead>
-        <tr>
-          <th>タスク名</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for task in expired_tasks %}
-        <tr style="color: #ff0000">
-          <td>{{ task.task_name }}</td>
-          <td>
-            <button type="button" class="mdl-button mdl-js-button mdl-button--raised complete" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
-              <i class="material-icons">done</i>
-            </button>
+          <td style="text-align: right;">
+            <span>タスク名</span>
+            <span class="required">*</span>
           </td>
-          <td>削除</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-    <span>なし</span>
-    {% endif %}
-
-    <h6>本日までのタスク</h6>
-    {% if danger_tasks|length != 0 %}
-    <table class="mdl-data-table mdl-js-data-table center-table left-table">
-      <thead>
-        <tr>
-          <th>タスク名</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for task in danger_tasks %}
-        <tr style="color: #ffa500">
-          <td>{{ task.task_name }}</td>
           <td>
-            <button type="button" class="mdl-button mdl-js-button mdl-button--raised complete" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
-              <i class="material-icons">done</i>
-            </button>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="text" class="mdl-textfield__input" name="task_name_input" id="task_name_input" required>
+            </div>
           </td>
-          <td>削除</td>
         </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-    <span>なし</span>
-    {% endif %}
-
-    <h6>全タスク</h6>
-    {% if other_tasks|length != 0 %}
-    <table class="mdl-data-table mdl-js-data-table center-table left-table">
-      <thead>
         <tr>
-          <th>タスク名</th>
-          <th>期日</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for task in other_tasks %}
-        <tr>
-          <td>{{ task.task_name }}</td>
-          <td>{{ task.deadline }}</td>
+          <td style="text-align: right;">
+            <span>期日</span>
+            <span class="required">*</span>
+          </td>
           <td>
-            <button type="button" class="mdl-button mdl-js-button mdl-button--raised complete" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
-              <i class="material-icons">done</i>
-            </button>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="text" class="mdl-textfield__input flatpickr-input" name="deadline_input" id="deadline_input" readonly>
+            </div>
+            <button type="button" id="everyday" class="mdl-button mdl-js-button mdl-button--raised">毎日</button>
+            <button type="button" id="reset" class="mdl-button mdl-js-button mdl-button--raised">リセット</button>
           </td>
-          <td>削除</td>
         </tr>
-        {% endfor %}
       </tbody>
     </table>
-    {% else %}
-    <span>なし</span>
-    {% endif %}
+    <div class="form-button">
+      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">登録</button>
+    </div>
+  </form>
 
-    <h4>検索</h4>
-    <form action="task" method="get">
-      <table class="center-table">
-        <tbody>
-          <tr>
-            <td>
-              <div class="mdl-textfield mdl-js-textfield" style="width: 150px;">
-                <input type="text" class="mdl-textfield__input flatpickr-input" name="start_date_input" id="start_date_input" readonly>
-              </div>
-            </td>
-            <td>
-              <div class="mdl-textfield mdl-js-textfield" style="width: 150px;">
-                <input type="text" class="mdl-textfield__input flatpickr-input" name="end_date_input" id="end_date_input" readonly>
-              </div>
-            </td>
-            <td>
-              <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">検索</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </form>
-  </div>
+  <h4>閲覧</h4>
+  <h6>毎日のタスク</h6>
+  {% if everyday_tasks|length != 0 %}
+  <table class="mdl-data-table mdl-js-data-table center-table left-table">
+    <thead>
+      <tr>
+        <th>タスク名</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in everyday_tasks %}
+      <tr>
+        <td>{{ task.task_name }}</td>
+        <td>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised edit" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+            <i class="material-icons">mode_edit</i>
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <span>なし</span>
+  {% endif %}
 
-  <!-- タスク編集ダイアログ -->
-  
+  <h6>期限切れタスク</h6>
+  {% if expired_tasks|length != 0 %}
+  <table class="mdl-data-table mdl-js-data-table center-table left-table">
+    <thead>
+      <tr>
+        <th>タスク名</th>
+        <th>期日</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in expired_tasks %}
+      <tr style="color: #ff0000">
+        <td>{{ task.task_name }}</td>
+        <td>{{ task.deadline }}</td>
+        <td>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised edit" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+            <i class="material-icons">mode_edit</i>
+          </button>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised complete" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+            <i class="material-icons">done</i>
+          </button>
+        </td>
+        <td>削除</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <span>なし</span>
+  {% endif %}
 
-  <!-- タスク完了ダイアログ -->
-  
+  <h6>本日までのタスク</h6>
+  {% if danger_tasks|length != 0 %}
+  <table class="mdl-data-table mdl-js-data-table center-table left-table">
+    <thead>
+      <tr>
+        <th>タスク名</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in danger_tasks %}
+      <tr style="color: #ffa500">
+        <td>{{ task.task_name }}</td>
+        <td>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised edit" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+            <i class="material-icons">mode_edit</i>
+          </button>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised complete" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+            <i class="material-icons">done</i>
+          </button>
+        </td>
+        <td>削除</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <span>なし</span>
+  {% endif %}
+
+  <h6>全タスク</h6>
+  {% if other_tasks|length != 0 %}
+  <table class="mdl-data-table mdl-js-data-table center-table left-table">
+    <thead>
+      <tr>
+        <th>タスク名</th>
+        <th>期日</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in other_tasks %}
+      <tr>
+        <td>{{ task.task_name }}</td>
+        <td>{{ task.deadline }}</td>
+        <td>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised edit" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+            <i class="material-icons">mode_edit</i>
+          </button>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised complete" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+            <i class="material-icons">done</i>
+          </button>
+        </td>
+        <td>削除</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <span>なし</span>
+  {% endif %}
+
+  <h4>検索</h4>
+  <form action="task" method="get">
+    <table class="center-table">
+      <tbody>
+        <tr>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="text" class="mdl-textfield__input flatpickr-input" name="start_date_input" id="start_date_input" readonly>
+            </div>
+          </td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="text" class="mdl-textfield__input flatpickr-input" name="end_date_input" id="end_date_input" readonly>
+            </div>
+          </td>
+          <td>
+            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">検索</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+{% endblock %}
+
+{% block dialog %}
+<!-- タスク編集ダイアログ -->
+<div class="edit-dialog">
+  <h4>タスク編集</h4>
+  <p>「閉じる」か「背景」をクリックするとモーダルウィンドウを終了します。</p>
+</div>
+
+<!-- タスク完了ダイアログ -->
+<div class="complete-dialog">
+  <h4>タスク完了</h4>
+  <form action="complete_task" method="post">
+    <table class="center-table">
+      <tbody>
+        <tr>
+          <td>完了日</td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="text" class="mdl-textfield__input flatpickr-input" name="complete_date" id="complete_date" readonly>
+              <input type="hidden" name="task_name" id="task_name">
+              <input type="hidden" name="deadline" id="deadline">
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-button">
+      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">完了</button>
+    </div>
+  </form>
+</div>
 {% endblock %}

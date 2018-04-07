@@ -115,7 +115,7 @@ def register_task():
 def complete_task():
   task_name = request.form['task_name']
   deadline = request.form['deadline']
-  today = (datetime.now(JST)).strftime("%Y-%m-%d")
+  complete_date = request.form['complete_date']
 
   try:
     # 実績登録
@@ -123,7 +123,7 @@ def complete_task():
     task = datastore.Entity(key)
     task.update({
       'task_name': task_name,
-      'treated_date': today,
+      'treated_date': complete_date,
       'deadline': deadline
     })
     CLIENT.put(task)
