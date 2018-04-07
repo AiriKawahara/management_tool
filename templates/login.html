@@ -1,36 +1,44 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <form action="login" method="post">
-    <table class="form">
-      <tbody>
-        {% if error %}
-        <tr>
-          <td class="login-error" colspan="2">ログインIDまたはパスワードが不正です。</td>
-        </tr>
+<form action="login" method="post">
+  <table class="form">
+    <tbody>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <tr>
+              <td class="login-error" colspan="2">{{ message }}</td>
+            </tr>
+          {% endfor %}
         {% endif %}
-        <tr>
-          <td>ログインID<span class="required">*</span></td>
-          <td>
-            <div class="mdl-textfield mdl-js-textfield">
-              <input type="text" class="mdl-textfield__input" name="login_id" id="login_id" required>
-              <label class="mdl-textfield__label" for="login_id"></label>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>パスワード<span class="required">*</span></td>
-          <td>
-            <div class="mdl-textfield mdl-js-textfield">
-              <input type="password" class="mdl-textfield__input" name="password" id="password" required>
-              <label class="mdl-textfield__label" for="password"></label>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="form-button">
-      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">ログイン</button>
-    </div>
-  </form>
+      {% endwith %}
+      <tr>
+        <td>ログインID<span class="required">*</span></td>
+        <td>
+          <div class="mdl-textfield mdl-js-textfield">
+            <input type="text" class="mdl-textfield__input" name="login_id" id="login_id" required>
+            <label class="mdl-textfield__label" for="login_id"></label>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>パスワード<span class="required">*</span></td>
+        <td>
+          <div class="mdl-textfield mdl-js-textfield">
+            <input type="password" class="mdl-textfield__input" name="password" id="password" required>
+            <label class="mdl-textfield__label" for="password"></label>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="form-button">
+    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">ログイン</button>
+  </div>
+</form>
+{% endblock %}
+
+{% block script %}
+<script src="/static/js/login.js"></script>
 {% endblock %}

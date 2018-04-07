@@ -18,8 +18,7 @@
           <span class="mdl-layout-title">管理ツール</span>
         </div>
       </header>
-      {% if not login %}
-      <div class="mdl-layout__drawer">
+      <div class="mdl-layout__drawer menu-list">
         <span class="mdl-layout-title"></span>
         <nav class="mdl-navigation">
           <a href="/task" class="mdl-button nav-button">タスク管理</a>
@@ -28,7 +27,6 @@
           <a href="/logout" class="mdl-button nav-button">ログアウト</a>
         </nav>
       </div>
-      {% endif %}
       <main class="mdl-layout__content">
         <div class="page-content">
           {% block content %}
@@ -42,5 +40,7 @@
     <script src="/static/js/jquery-3.3.1.min.js"></script>
     <script src="/static/js/flatpickr.js"></script>
     <script src="/static/js/common.js"></script>
+    {% block script %}
+    {% endblock %}
   </body>
 </html>

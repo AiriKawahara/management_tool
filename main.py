@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 from google.cloud import datastore
 import hashlib
 import random
@@ -19,8 +19,7 @@ def top():
   else:
     return render_template(
       'login.html',
-      title='ログイン',
-      login=True, error=False)
+      title='ログイン')
 
 # ログイン処理
 @app.route('/login', methods=['POST'])
@@ -32,19 +31,8 @@ def login():
   if login_check:
     return redirect('/task')
   else:
-    return redirect('/login')
-
-# ログインエラーの場合は再度ログイン画面を表示
-@app.route('/login')
-def login_failed():
-  if authentication_check():
-    return redirect('/task')
-  else:
-    return render_template(
-      'login.html',
-      title='ログイン',
-      login=True,
-      error=True)
+    flash('ログインIDまたはパスワードが不正です。')
+    return redirect('/')
 
 # ログアウト処理
 @app.route('/logout')

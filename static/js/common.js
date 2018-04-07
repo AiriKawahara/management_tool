@@ -1,4 +1,4 @@
-$(function(){
+$(function() {
   // datepicker設定値
   $('#deadline_input').flatpickr({
     enableTime: false,
