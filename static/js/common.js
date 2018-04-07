@@ -1,19 +1,19 @@
 $(function(){
   // datepicker設定値
-  $(".register").flatpickr({
+  $("#deadline_input").flatpickr({
     enableTime: false,
     dateFormat: "Y-m-d",
     minDate: getDate(),
     defaultDate: getDate()
   });
 
-  $(".start_date").flatpickr({
+  $("#start_date_input").flatpickr({
     enableTime: false,
     dateFormat: "Y-m-d",
     defaultDate: getDate()
   });
 
-  $(".end_date").flatpickr({
+  $("#end_date_input").flatpickr({
     enableTime: false,
     dateFormat: "Y-m-d",
     defaultDate: getDate(7)

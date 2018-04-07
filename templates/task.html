@@ -4,7 +4,7 @@
   <div style="margin: 0 20px;">
     <h4>登録</h4>
     <form action="register_task" method="post">
-      <table class="center_table">
+      <table class="center-table">
         <tbody>
           <tr>
             <td style="text-align: right;">
@@ -24,7 +24,7 @@
             </td>
             <td>
               <div class="mdl-textfield mdl-js-textfield" style="width: 120px;">
-                <input type="text" class="mdl-textfield__input register flatpickr-input" name="deadline_input" id="deadline_input" readonly>
+                <input type="text" class="mdl-textfield__input flatpickr-input" name="deadline_input" id="deadline_input" readonly>
               </div>
               <button type="button" id="everyday" class="mdl-button mdl-js-button mdl-button--raised">毎日</button>
               <button type="button" id="reset" class="mdl-button mdl-js-button mdl-button--raised">リセット</button>
@@ -32,7 +32,7 @@
           </tr>
         </tbody>
       </table>
-      <div class="form_button">
+      <div class="form-button">
         <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">登録</button>
       </div>
     </form>
@@ -40,7 +40,7 @@
     <h4>閲覧</h4>
     <h6>毎日のタスク</h6>
     {% if everyday_tasks|length != 0 %}
-    <table class="mdl-data-table mdl-js-data-table center_table left_table">
+    <table class="mdl-data-table mdl-js-data-table center-table left-table">
       <thead>
         <tr>
           <th>タスク名</th>
@@ -62,7 +62,7 @@
 
     <h6>期限切れタスク</h6>
     {% if expired_tasks|length != 0 %}
-    <table class="mdl-data-table mdl-js-data-table center_table left_table">
+    <table class="mdl-data-table mdl-js-data-table center-table left-table">
       <thead>
         <tr>
           <th>タスク名</th>
@@ -90,7 +90,7 @@
 
     <h6>本日までのタスク</h6>
     {% if danger_tasks|length != 0 %}
-    <table class="mdl-data-table mdl-js-data-table center_table left_table">
+    <table class="mdl-data-table mdl-js-data-table center-table left-table">
       <thead>
         <tr>
           <th>タスク名</th>
@@ -118,7 +118,7 @@
 
     <h6>全タスク</h6>
     {% if other_tasks|length != 0 %}
-    <table class="mdl-data-table mdl-js-data-table center_table left_table">
+    <table class="mdl-data-table mdl-js-data-table center-table left-table">
       <thead>
         <tr>
           <th>タスク名</th>
@@ -148,17 +148,17 @@
 
     <h4>検索</h4>
     <form action="task" method="get">
-      <table class="center_table">
+      <table class="center-table">
         <tbody>
           <tr>
             <td>
               <div class="mdl-textfield mdl-js-textfield" style="width: 150px;">
-                <input type="text" class="mdl-textfield__input start_date flatpickr-input" name="start_date_input" id="start_date_input" readonly>
+                <input type="text" class="mdl-textfield__input flatpickr-input" name="start_date_input" id="start_date_input" readonly>
               </div>
             </td>
             <td>
               <div class="mdl-textfield mdl-js-textfield" style="width: 150px;">
-                <input type="text" class="mdl-textfield__input end_date flatpickr-input" name="end_date_input" id="end_date_input" readonly>
+                <input type="text" class="mdl-textfield__input flatpickr-input" name="end_date_input" id="end_date_input" readonly>
               </div>
             </td>
             <td>
