@@ -28,10 +28,30 @@ $(function() {
 
   $('#everyday').click(function() {
     $('#deadline_input').val('2099-12-31');
+    $('#deadline_input').flatpickr({
+      defaultDate: '2099-12-31'
+    });
   });
 
   $('#reset').click(function() {
     $('#deadline_input').val(getDate());
+    $('#deadline_input').flatpickr({
+      defaultDate: getDate()
+    });
+  });
+
+  $('#everyday_edit').click(function() {
+    $('#new_deadline').val('2099-12-31');
+    $('#new_deadline').flatpickr({
+      defaultDate: '2099-12-31'
+    });
+  });
+
+  $('#reset_edit').click(function() {
+    $('#new_deadline').val(getDate());
+    $('#new_deadline').flatpickr({
+      defaultDate: getDate()
+    });
   });
 
   // 編集ボタン押下時
@@ -44,6 +64,7 @@ $(function() {
     controlDialog($(this), 'complete');
   });
 
+  // 削除ボタン押下時
   $('.delete').click(function() {
     controlDialog($(this), 'delete');
   });
@@ -140,8 +161,21 @@ function controlDialog($elem, type) {
   $('#overlay').show();
 
   // タスク情報をセット
-  $(`.${type}-dialog #task_name`).val(taskName);
-  $(`.${type}-dialog #deadline`).val(deadline);
+  if (type == 'edit') {
+    $('.edit-dialog #old_task_name').val(taskName);
+    $('.edit-dialog #new_task_name').val(taskName);
+    $('.edit-dialog #old_deadline').val(deadline);
+    $('.edit-dialog #new_deadline').val(deadline);
+
+    $('#new_deadline').flatpickr({
+      enableTime: false,
+      dateFormat: "Y-m-d",
+      defaultDate: deadline
+    });
+  } else {
+    $(`.${type}-dialog #task_name`).val(taskName);
+    $(`.${type}-dialog #deadline`).val(deadline);
+  }
 
   centeringDialogSyncer();
   $(`.${type}-dialog`).show();

@@ -33,8 +33,14 @@
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input flatpickr-input" name="deadline_input" id="deadline_input" readonly>
             </div>
-            <button type="button" id="everyday" class="mdl-button mdl-js-button mdl-button--raised">毎日</button>
-            <button type="button" id="reset" class="mdl-button mdl-js-button mdl-button--raised">リセット</button>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="form-button" style="margin-bottom: 10px;">
+              <button type="button" id="everyday" class="mdl-button mdl-js-button mdl-button--raised">毎日</button>
+              <button type="button" id="reset" class="mdl-button mdl-js-button mdl-button--raised">リセット</button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -203,7 +209,41 @@
 <!-- タスク編集ダイアログ -->
 <div class="edit-dialog">
   <h4>タスク編集</h4>
-  <p>「閉じる」か「背景」をクリックするとモーダルウィンドウを終了します。</p>
+  <form action="edit_task" method="post">
+    <table class="center-table">
+      <tbody>
+        <tr>
+          <td>タスク名</td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="text" class="mdl-textfield__input flatpickr-input" name="new_task_name" id="new_task_name">
+              <input type="hidden" name="old_task_name" id="old_task_name">
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>期日</td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="text" class="mdl-textfield__input flatpickr-input" name="new_deadline" id="new_deadline" readonly>
+              <input type="hidden" name="old_deadline" id="old_deadline">
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="form-button" style="margin-bottom: 10px;">
+              <button type="button" id="everyday_edit" class="mdl-button mdl-js-button mdl-button--raised">毎日</button>
+              <button type="button" id="reset_edit" class="mdl-button mdl-js-button mdl-button--raised">リセット</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-button">
+      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">編集</button>
+    </div>
+  </form>
 </div>
 
 <!-- タスク完了ダイアログ -->

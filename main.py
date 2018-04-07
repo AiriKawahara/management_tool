@@ -42,7 +42,7 @@ def logout():
   return redirect('/')
 
 # タスク管理画面
-@app.route('/task', methods=['GET'])
+@app.route('/task')
 def task():
   if not authentication_check():
     return redirect('/')
@@ -122,8 +122,35 @@ def complete_task():
   query.add_filter('task_name', '=', task_name)
   query.add_filter('deadline', '=', deadline)
   target = list(query.fetch())
+  if len(target) > 0:
+    key = target[0].__dict__['key']
+    CLIENT.delete(key)
+  return redirect('/task')
+
+# タスク編集
+@app.route('/edit_task', methods=['POST'])
+def edit_task():
+  old_task_name = request.form['old_task_name']
+  new_task_name = request.form['new_task_name']
+  old_deadline = request.form['old_deadline']
+  new_deadline = request.form['new_deadline']
+
+  query = CLIENT.query(kind='task')
+  query.add_filter('task_name', '=', old_task_name)
+  query.add_filter('deadline', '=', old_deadline)
+  target = list(query.fetch())
+
+  if len(target) == 0:
+    flash('タスクの更新に失敗しました。')
+    return redirect('/task')
+
   key = target[0].__dict__['key']
-  CLIENT.delete(key)
+  task = datastore.Entity(key)
+  task.update({
+    'task_name': new_task_name,
+    'deadline': new_deadline
+  })
+  CLIENT.put(task)
   return redirect('/task')
 
 # タスク削除
