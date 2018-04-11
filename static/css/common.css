@@ -54,11 +54,49 @@ h4 {
 
 .mdl-textfield {
   width: auto;
-  padding: 10px 0;
 }
 
 .mdl-button {
   min-width: 0;
+}
+
+.mdl-data-table {
+  width: 100%;
+}
+
+.mdl-data-table th:first-child,
+.mdl-data-table td:first-child,
+.mdl-data-table th:last-child,
+.mdl-data-table td:last-child,
+.mdl-data-table th,
+.mdl-data-table td {
+  padding: 0 10px;
+}
+
+.mdl-data-table th {
+  vertical-align: middle;
+}
+
+.mdl-data-table .task_name {
+  white-space: normal;
+}
+
+.mdl-data-table .deadline {
+  width: 87px;
+}
+
+.mdl-data-table .option {
+  width: 180px;
+}
+
+.mdl-data-table .option_everyday {
+  width: 122px;
+}
+
+@media (min-width: 1000px) {
+  .mdl-data-table {
+    width: 800px;
+  }
 }
 
 /* ダイアログ */

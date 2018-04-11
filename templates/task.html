@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div style="margin: 0 20px;">
+<div style="margin: 0 20px 15px 20px;">
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       {% for message in messages %}
@@ -21,6 +21,7 @@
           <td>
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input" name="task_name_input" id="task_name_input" required>
+              <label class="mdl-textfield__label" for="task_name_input"></label>
             </div>
           </td>
         </tr>
@@ -32,6 +33,7 @@
           <td>
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input flatpickr-input" name="deadline_input" id="deadline_input" readonly>
+              <label class="mdl-textfield__label" for="deadline_input"></label>
             </div>
           </td>
         </tr>
@@ -63,8 +65,8 @@
     <tbody>
       {% for task in everyday_tasks %}
       <tr>
-        <td>{{ task.task_name }}</td>
-        <td>
+        <td class="task_name">{{ task.task_name }}</td>
+        <td class="option_everyday">
           <button type="button" class="mdl-button mdl-js-button mdl-button--raised edit" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
             <i class="material-icons">mode_edit</i>
           </button>
@@ -93,9 +95,9 @@
     <tbody>
       {% for task in expired_tasks %}
       <tr style="color: #ff0000">
-        <td>{{ task.task_name }}</td>
-        <td>{{ task.deadline }}</td>
-        <td>
+        <td class="task_name">{{ task.task_name }}</td>
+        <td class="deadline">{{ task.deadline }}</td>
+        <td class="option">
           <button type="button" class="mdl-button mdl-js-button mdl-button--raised edit" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
             <i class="material-icons">mode_edit</i>
           </button>
@@ -126,8 +128,8 @@
     <tbody>
       {% for task in danger_tasks %}
       <tr style="color: #ffa500">
-        <td>{{ task.task_name }}</td>
-        <td>
+        <td class="task_name">{{ task.task_name }}</td>
+        <td class="option">
           <button type="button" class="mdl-button mdl-js-button mdl-button--raised edit" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
             <i class="material-icons">mode_edit</i>
           </button>
@@ -159,9 +161,9 @@
     <tbody>
       {% for task in other_tasks %}
       <tr>
-        <td>{{ task.task_name }}</td>
-        <td>{{ task.deadline }}</td>
-        <td>
+        <td class="task_name">{{ task.task_name }}</td>
+        <td class="deadline">{{ task.deadline }}</td>
+        <td class="option">
           <button type="button" class="mdl-button mdl-js-button mdl-button--raised edit" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
             <i class="material-icons">mode_edit</i>
           </button>
@@ -188,11 +190,13 @@
           <td>
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input flatpickr-input" name="start_date_input" id="start_date_input" readonly>
+              <label class="mdl-textfield__label" for="start_date_input"></label>
             </div>
           </td>
           <td>
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input flatpickr-input" name="end_date_input" id="end_date_input" readonly>
+              <label class="mdl-textfield__label" for="end_date_input"></label>
             </div>
           </td>
           <td>
@@ -202,6 +206,36 @@
       </tbody>
     </table>
   </form>
+  {% if search_tasks|length != 0 %}
+  <table class="mdl-data-table mdl-js-data-table center-table left-table">
+    <thead>
+      <tr>
+        <th>タスク名</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in search_tasks %}
+      <tr>
+        <td class="task_name">{{ task.task_name }}</td>
+        <td class="deadline">{{ task.deadline }}</td>
+        <td class="option">
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised edit" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+            <i class="material-icons">mode_edit</i>
+          </button>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised complete" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+            <i class="material-icons">done</i>
+          </button>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised delete" data-name="{{ task.task_name }}" data-deadline="{{ task.deadline }}">
+            <i class="material-icons">delete</i>
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
 </div>
 {% endblock %}
 
@@ -213,19 +247,21 @@
     <table class="center-table">
       <tbody>
         <tr>
-          <td>タスク名</td>
+          <td>タスク名<span class="required">*</span></td>
           <td>
             <div class="mdl-textfield mdl-js-textfield">
-              <input type="text" class="mdl-textfield__input flatpickr-input" name="new_task_name" id="new_task_name">
+              <input type="text" class="mdl-textfield__input flatpickr-input" name="new_task_name" id="new_task_name" required>
+              <label class="mdl-textfield__label" for="new_task_name"></label>
               <input type="hidden" name="old_task_name" id="old_task_name">
             </div>
           </td>
         </tr>
         <tr>
-          <td>期日</td>
+          <td>期日<span class="required">*</span></td>
           <td>
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input flatpickr-input" name="new_deadline" id="new_deadline" readonly>
+              <label class="mdl-textfield__label" for="new_deadline"></label>
               <input type="hidden" name="old_deadline" id="old_deadline">
             </div>
           </td>
@@ -253,10 +289,11 @@
     <table class="center-table">
       <tbody>
         <tr>
-          <td>完了日</td>
+          <td>完了日<span class="required">*</span></td>
           <td>
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input flatpickr-input" name="complete_date" id="complete_date" readonly>
+              <label class="mdl-textfield__label" for="complete_date"></label>
               <input type="hidden" name="task_name" id="task_name">
               <input type="hidden" name="deadline" id="deadline">
             </div>

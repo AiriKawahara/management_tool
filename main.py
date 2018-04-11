@@ -64,6 +64,8 @@ def task():
   other_tasks = get_other_tasks(all_tasks, today)
   if start_date and end_date:
     search_tasks = get_search_tasks(all_tasks, start_date, end_date)
+    if len(search_tasks) == 0:
+      flash('検索条件に一致するタスクが存在しません。')
   else:
     search_tasks = []
 
@@ -273,7 +275,7 @@ def get_expired_tasks(all_tasks, today):
   for task in all_tasks:
     if task['deadline'] < today:
       results.append(task)
-  return results
+  return sorted(results,key=lambda x:x["deadline"])
 
 # 今日までのタスクを取得
 def get_danger_tasks(all_tasks, today):
@@ -290,7 +292,7 @@ def get_other_tasks(all_tasks, today):
   for task in all_tasks:
     if task['deadline'] > today and task['deadline'] != const_day:
       results.append(task)
-  return results
+  return sorted(results,key=lambda x:x["deadline"])
 
 # 検索範囲内のタスクを取得
 def get_search_tasks(all_tasks, start_date, end_date):
@@ -298,7 +300,7 @@ def get_search_tasks(all_tasks, start_date, end_date):
   for task in all_tasks:
     if task['deadline'] >= start_date and task['deadline'] <= end_date:
       results.append(task)
-  return results
+  return sorted(results,key=lambda x:x["deadline"])
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8000)
