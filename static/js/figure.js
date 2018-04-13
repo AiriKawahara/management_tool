@@ -23,7 +23,7 @@ $(function() {
     $('#chart_area').width('900px');
     $('#chart_area').height('500px');
     google.charts.load('current', {packages: ['corechart', 'line']});
-    google.charts.setOnLoadCallback(drawLogScales);
+    google.charts.setOnLoadCallback(getFigure);
   });
 });
 
@@ -44,21 +44,20 @@ function getDate(days = 0) {
 /**
  * 体型管理データを取得する。
  */
-function get_figure() {
+function getFigure() {
   var data = {
     "figure_start_date": $('#figure_start_date').val(),
     "figure_end_date": $('#figure_end_date').val()
   }
 
-  // $.ajax({
-  //   type: 'GET',
-  //   url: '/get_figure',
-  //   data: data,
-  //   timeout: 10000
-  // })
-  // .done(function(response) {
-  //   console.log(response);
-    return [
+  $.ajax({
+    type: 'GET',
+    url: '/get_figure',
+    data: data,
+    timeout: 10000
+  })
+  .done(function(response) {
+    var graphData = [
       [0, 0, 0],    [1, 10, 5],   [2, 23, 15],  [3, 17, 9],   [4, 18, 10],  [5, 9, 5],
       [6, 11, 3],   [7, 27, 19],  [8, 33, 25],  [9, 40, 32],  [10, 32, 24], [11, 35, 27],
       [12, 30, 22], [13, 40, 32], [14, 42, 34], [15, 47, 39], [16, 44, 36], [17, 48, 40],
@@ -71,26 +70,27 @@ function get_figure() {
       [54, 71, 63], [55, 72, 64], [56, 73, 65], [57, 75, 67], [58, 70, 62], [59, 68, 60],
       [60, 64, 56], [61, 60, 52], [62, 65, 57], [63, 67, 59], [64, 68, 60], [65, 69, 61],
       [66, 70, 62], [67, 72, 64], [68, 75, 67], [69, 80, 72]
-    ]
-  // }).fail(function(xhr, textStatus, errorThrown) {
-  //   alert('エラーが発生しました。');
-  //   console.log(textStatus);
-  //   console.log(xhr);
-  //   console.log(errorThrown);
-  // });
+    ];
+    drawLogScales(graphData);
+  }).fail(function(xhr, textStatus, errorThrown) {
+    alert('エラーが発生しました。');
+    console.log(textStatus);
+    console.log(xhr);
+    console.log(errorThrown);
+  });
 }
 
 /**
  * グラフを描画する。
  * 参考URL：https://developers.google.com/chart/interactive/docs/gallery/linechart
  */
-function drawLogScales() {
+function drawLogScales(graphData) {
   var data = new google.visualization.DataTable();
   data.addColumn('number', 'X');
   data.addColumn('number', 'Dogs');
   data.addColumn('number', 'Cats');
 
-  data.addRows(get_figure());
+  data.addRows(graphData);
 
   var options = {
     hAxis: {
