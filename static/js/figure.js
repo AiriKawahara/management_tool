@@ -57,6 +57,11 @@ function getFigure() {
     timeout: 10000
   })
   .done(function(response) {
+    if (response.length == 0) {
+      location.reload();
+      return;
+    }
+
     var graphData = [
       [0, 0, 0],    [1, 10, 5],   [2, 23, 15],  [3, 17, 9],   [4, 18, 10],  [5, 9, 5],
       [6, 11, 3],   [7, 27, 19],  [8, 33, 25],  [9, 40, 32],  [10, 32, 24], [11, 35, 27],
@@ -72,6 +77,7 @@ function getFigure() {
       [66, 70, 62], [67, 72, 64], [68, 75, 67], [69, 80, 72]
     ];
     drawLogScales(graphData);
+
   }).fail(function(xhr, textStatus, errorThrown) {
     alert('エラーが発生しました。');
     console.log(textStatus);
@@ -83,6 +89,7 @@ function getFigure() {
 /**
  * グラフを描画する。
  * 参考URL：https://developers.google.com/chart/interactive/docs/gallery/linechart
+ * @param {array} graphData グラフ描画用配列
  */
 function drawLogScales(graphData) {
   var data = new google.visualization.DataTable();

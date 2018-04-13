@@ -13,15 +13,6 @@
   <form action="register_figure" method="post">
     <table class="center-table">
       <tbody>
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% for message in messages %}
-              <tr>
-                <td class="error" colspan="2">{{ message }}</td>
-              </tr>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
         <tr>
           <td>体重 (kg)</td>
           <td>

@@ -245,9 +245,8 @@ def get_figure():
 
   if len(results) == 0:
     flash('検索条件に一致するデータが存在しません。')
-    return redirect('/figure')
-  else:
-    return jsonify(results)
+  
+  return jsonify(results)
 
 # ブログ管理画面
 @app.route('/blog')
