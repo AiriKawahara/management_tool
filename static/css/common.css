@@ -24,12 +24,13 @@ h4 {
   margin: 0 auto;
 }
 
-.required {
-  color: #ff0000;
+.input-table td:first-child {
+  text-align: right;
 }
 
-.required::before {
-  content: "\00a0";
+.required::after {
+  content: "\00a0*";
+  color: #ff0000;
 }
 
 .error {
@@ -93,7 +94,23 @@ h4 {
   width: 122px;
 }
 
-@media (min-width: 1000px) {
+@media (max-width: 767px) {
+  .pc {
+    display: none;
+  }
+
+  td {
+    padding: 0 5px;
+  }
+}
+
+@media (min-width: 768px) {
+  .sp {
+    display: none;
+  }
+}
+
+@media (min-width: 840px) {
   .mdl-data-table {
     width: 800px;
   }

@@ -11,13 +11,10 @@
   {% endwith %}
   <h4 style="margin-top: 10px;">登録</h4>
   <form action="register_task" method="post">
-    <table class="center-table">
+    <table class="center-table input-table">
       <tbody>
         <tr>
-          <td style="text-align: right;">
-            <span>タスク名</span>
-            <span class="required">*</span>
-          </td>
+          <td class="required">タスク名</td>
           <td>
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input" name="task_name_input" id="task_name_input" required>
@@ -26,10 +23,7 @@
           </td>
         </tr>
         <tr>
-          <td style="text-align: right;">
-            <span>期日</span>
-            <span class="required">*</span>
-          </td>
+          <td class="required">期日</td>
           <td>
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input flatpickr-input" name="deadline_input" id="deadline_input" readonly>
@@ -200,11 +194,14 @@
             </div>
           </td>
           <td>
-            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">検索</button>
+            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pc">検索</button>
           </td>
         </tr>
       </tbody>
     </table>
+    <div class="form-button">
+      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored sp">検索</button>
+    </div>
   </form>
   {% if search_tasks|length != 0 %}
   <table class="mdl-data-table mdl-js-data-table center-table left-table">
@@ -244,10 +241,10 @@
 <div class="edit-dialog">
   <h4>タスク編集</h4>
   <form action="edit_task" method="post">
-    <table class="center-table">
+    <table class="center-table input-table">
       <tbody>
         <tr>
-          <td>タスク名<span class="required">*</span></td>
+          <td class="required">タスク名</td>
           <td>
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input flatpickr-input" name="new_task_name" id="new_task_name" required>
@@ -257,7 +254,7 @@
           </td>
         </tr>
         <tr>
-          <td>期日<span class="required">*</span></td>
+          <td class="required">期日</td>
           <td>
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input flatpickr-input" name="new_deadline" id="new_deadline" readonly>
@@ -286,10 +283,10 @@
 <div class="complete-dialog">
   <h4>タスク完了</h4>
   <form action="complete_task" method="post">
-    <table class="center-table">
+    <table class="center-table input-table">
       <tbody>
         <tr>
-          <td>完了日<span class="required">*</span></td>
+          <td class="required">完了日</td>
           <td>
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input flatpickr-input" name="complete_date" id="complete_date" readonly>

@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<form action="login" method="post">
-  <table class="form input-table">
+<form action="figure_register" method="post">
+  <table class="form">
     <tbody>
       {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -14,16 +14,16 @@
         {% endif %}
       {% endwith %}
       <tr>
-        <td class="required">ログインID</td>
+        <td>体重 (kg)</td>
         <td>
           <div class="mdl-textfield mdl-js-textfield">
-            <input type="text" class="mdl-textfield__input" name="login_id" id="login_id" required>
+            <input type="text" class="mdl-textfield__input" name="login_id" id="login_id">
             <label class="mdl-textfield__label" for="login_id"></label>
           </div>
         </td>
       </tr>
       <tr>
-        <td class="required">パスワード</td>
+        <td>パスワード</td>
         <td>
           <div class="mdl-textfield mdl-js-textfield">
             <input type="password" class="mdl-textfield__input" name="password" id="password" required>
@@ -37,8 +37,4 @@
     <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">ログイン</button>
   </div>
 </form>
-{% endblock %}
-
-{% block script %}
-<script src="/static/js/login.js"></script>
 {% endblock %}

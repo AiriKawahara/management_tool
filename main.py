@@ -190,6 +190,14 @@ def training():
   else:
     return redirect('/')
 
+# 体型管理画面
+@app.route('/figure')
+def figure():
+  if authentication_check():
+    return render_template('figure.html', title='体型管理')
+  else:
+    return redirect('/')
+
 # ユーザーの存在チェック
 def user_exists(login_id, password):
   # 入力されたパスワードを暗号化
