@@ -198,6 +198,39 @@ def figure():
   else:
     return redirect('/')
 
+# 体型管理登録
+@app.route('/register_figure', methods=['POST'])
+def register_figure():
+  weight      = float(request.form['weight'])      if request.form['weight']      else None
+  fat         = float(request.form['fat'])         if request.form['fat']         else None
+  thickness_r = float(request.form['thickness_r']) if request.form['thickness_r'] else None
+  thickness_l = float(request.form['thickness_l']) if request.form['thickness_l'] else None
+  figure_date = request.form['figure_date']        if request.form['figure_date'] else None
+
+  query = CLIENT.query(kind='figure')
+  query.add_filter('figure_date', '=', figure_date)
+  results = list(query.fetch())
+  if len(results) > 0:
+    key = results[0].__dict__['key']
+    # 入力値が空の場合はDBの値を保持する
+    weight      = weight      if weight      else results[0]['weight']
+    fat         = fat         if fat         else results[0]['fat']
+    thickness_r = thickness_r if thickness_r else results[0]['right_thickness']
+    thickness_l = thickness_l if thickness_l else results[0]['left_thickness']
+  else:
+    key = CLIENT.key('figure')
+
+  task = datastore.Entity(key)
+  task.update({
+    'weight': weight,
+    'fat': fat,
+    'right_thickness': thickness_r,
+    'left_thickness': thickness_l,
+    'figure_date': figure_date
+  })
+  CLIENT.put(task)
+  return redirect('/figure')
+
 # ユーザーの存在チェック
 def user_exists(login_id, password):
   # 入力されたパスワードを暗号化

@@ -28,3 +28,11 @@ indexes:
   - name: training_date
   - name: training_count
   - name: training_time
+
+- kind: figure
+  properties:
+  - name: weight
+  - name: fat
+  - name: right_thickness
+  - name: left_thickness
+  - name: figure_date

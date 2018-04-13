@@ -1,69 +1,81 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<form action="figure_register" method="post">
-  <table class="form">
-    <tbody>
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-            <tr>
-              <td class="error" colspan="2">{{ message }}</td>
-            </tr>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-      <tr>
-        <td>体重 (kg)</td>
-        <td>
-          <div class="mdl-textfield mdl-js-textfield">
-            <input type="text" class="mdl-textfield__input" name="weight" id="weight">
-            <label class="mdl-textfield__label" for="weight"></label>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>体脂肪率 (%)</td>
-        <td>
-          <div class="mdl-textfield mdl-js-textfield">
-            <input type="text" class="mdl-textfield__input" name="fat" id="fat">
-            <label class="mdl-textfield__label" for="fat"></label>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>右太ももの太さ (cm)</td>
-        <td>
-          <div class="mdl-textfield mdl-js-textfield">
-            <input type="text" class="mdl-textfield__input" name="right_thickness" id="right_thickness">
-            <label class="mdl-textfield__label" for="right_thickness"></label>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>左太ももの太さ (cm)</td>
-        <td>
-          <div class="mdl-textfield mdl-js-textfield">
-            <input type="text" class="mdl-textfield__input" name="left_thickness" id="left_thickness">
-            <label class="mdl-textfield__label" for="left_thickness"></label>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>日付</td>
-        <td>
-          <div class="mdl-textfield mdl-js-textfield">
-            <input type="text" class="mdl-textfield__input" name="figure_date" id="figure_date">
-            <label class="mdl-textfield__label" for="figure_date"></label>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="form-button">
-    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">登録</button>
-  </div>
-</form>
+<div style="margin: 0 20px 15px 20px;">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <p class="error" style="margin: 10px 0 0;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  <h4 style="margin-top: 10px;">登録</h4>
+  <form action="register_figure" method="post">
+    <table class="center-table">
+      <tbody>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <tr>
+                <td class="error" colspan="2">{{ message }}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <tr>
+          <td>体重 (kg)</td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="number" step="0.1" class="mdl-textfield__input" name="weight" id="weight">
+              <label class="mdl-textfield__label" for="weight"></label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>体脂肪率 (%)</td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="number" step="0.1" class="mdl-textfield__input" name="fat" id="fat">
+              <label class="mdl-textfield__label" for="fat"></label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>右太ももの太さ (cm)</td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="number" step="0.1" class="mdl-textfield__input" name="thickness_r" id="thickness_r">
+              <label class="mdl-textfield__label" for="thickness_r"></label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>左太ももの太さ (cm)</td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="number" step="0.1" class="mdl-textfield__input" name="thickness_l" id="thickness_l">
+              <label class="mdl-textfield__label" for="thickness_l"></label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>日付</td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="text" class="mdl-textfield__input" name="figure_date" id="figure_date">
+              <label class="mdl-textfield__label" for="figure_date"></label>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-button">
+      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">登録</button>
+    </div>
+  </form>
+
+  <h4>閲覧</h4>
+</div>
 {% endblock %}
 
 {% block script %}
