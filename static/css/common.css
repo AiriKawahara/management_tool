@@ -28,6 +28,14 @@ h4 {
   text-align: right;
 }
 
+.sub-title {
+  font-size: 12px;
+}
+
+.sub-title::before {
+  content: "\00a0\00a0";
+}
+
 .required::after {
   content: "\00a0*";
   color: #ff0000;

@@ -47,7 +47,7 @@
   </form>
 
   <h4>閲覧</h4>
-  <h6>毎日のタスク</h6>
+  <h6>毎日のタスク<span class="sub-title">タスク数：{{ everyday_tasks|length }}</span></h6>
   {% if everyday_tasks|length != 0 %}
   <table class="mdl-data-table mdl-js-data-table center-table left-table">
     <thead>
@@ -76,7 +76,7 @@
   <span>なし</span>
   {% endif %}
 
-  <h6>期限切れタスク</h6>
+  <h6>期限切れタスク<span class="sub-title">タスク数：{{ expired_tasks|length }}</span></h6>
   {% if expired_tasks|length != 0 %}
   <table class="mdl-data-table mdl-js-data-table center-table left-table">
     <thead>
@@ -110,7 +110,7 @@
   <span>なし</span>
   {% endif %}
 
-  <h6>今日までのタスク</h6>
+  <h6>今日までのタスク<span class="sub-title">タスク数：{{ danger_tasks|length }}</span></h6>
   {% if danger_tasks|length != 0 %}
   <table class="mdl-data-table mdl-js-data-table center-table left-table">
     <thead>
@@ -142,7 +142,7 @@
   <span>なし</span>
   {% endif %}
 
-  <h6>全タスク</h6>
+  <h6>全タスク<span class="sub-title">タスク数：{{ other_tasks|length }}</span></h6>
   {% if other_tasks|length != 0 %}
   <table class="mdl-data-table mdl-js-data-table center-table left-table">
     <thead>

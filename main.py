@@ -231,6 +231,14 @@ def register_figure():
   CLIENT.put(task)
   return redirect('/figure')
 
+# ブログ管理画面
+@app.route('/blog')
+def blog():
+  if authentication_check():
+    return render_template('blog.html', title='ブログ管理')
+  else:
+    return redirect('/')
+
 # ユーザーの存在チェック
 def user_exists(login_id, password):
   # 入力されたパスワードを暗号化
