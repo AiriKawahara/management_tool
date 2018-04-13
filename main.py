@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, jsonify
 from google.cloud import datastore
 import hashlib
 import random
@@ -198,7 +198,7 @@ def figure():
   else:
     return redirect('/')
 
-# 体型管理登録
+# 体型情報登録
 @app.route('/register_figure', methods=['POST'])
 def register_figure():
   weight      = float(request.form['weight'])      if request.form['weight']      else None
@@ -210,6 +210,7 @@ def register_figure():
   query = CLIENT.query(kind='figure')
   query.add_filter('figure_date', '=', figure_date)
   results = list(query.fetch())
+
   if len(results) > 0:
     key = results[0].__dict__['key']
     # 入力値が空の場合はDBの値を保持する
@@ -230,6 +231,23 @@ def register_figure():
   })
   CLIENT.put(task)
   return redirect('/figure')
+
+#体型情報取得
+@app.route('/get_figure', methods=['GET'])
+def get_figure():
+  figure_start_date = request.args['figure_start_date']
+  figure_end_date   = request.args['figure_end_date']
+
+  query = CLIENT.query(kind='figure')
+  query.add_filter('figure_date', '>=', figure_start_date)
+  query.add_filter('figure_date', '<=', figure_end_date)
+  results = list(query.fetch())
+
+  if len(results) == 0:
+    flash('検索条件に一致するデータが存在しません。')
+    return redirect('/figure')
+  else:
+    return jsonify(results)
 
 # ブログ管理画面
 @app.route('/blog')

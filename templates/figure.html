@@ -75,9 +75,32 @@
   </form>
 
   <h4>閲覧</h4>
+  <table class="center-table">
+    <tbody>
+      <tr>
+        <td>
+          <div class="mdl-textfield mdl-js-textfield">
+            <input type="text" class="mdl-textfield__input flatpickr-input" name="figure_start_date" id="figure_start_date" readonly>
+            <label class="mdl-textfield__label" for="figure_start_date"></label>
+          </div>
+        </td>
+        <td>
+          <div class="mdl-textfield mdl-js-textfield">
+            <input type="text" class="mdl-textfield__input flatpickr-input" name="figure_end_date" id="figure_end_date" readonly>
+            <label class="mdl-textfield__label" for="figure_end_date"></label>
+          </div>
+        </td>
+        <td>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored search">検索</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div id="chart_area"></div>
 </div>
 {% endblock %}
 
 {% block script %}
+<script src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="/static/js/figure.js"></script>
 {% endblock %}
