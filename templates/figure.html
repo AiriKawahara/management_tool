@@ -17,24 +17,55 @@
         <td>体重 (kg)</td>
         <td>
           <div class="mdl-textfield mdl-js-textfield">
-            <input type="text" class="mdl-textfield__input" name="login_id" id="login_id">
-            <label class="mdl-textfield__label" for="login_id"></label>
+            <input type="text" class="mdl-textfield__input" name="weight" id="weight">
+            <label class="mdl-textfield__label" for="weight"></label>
           </div>
         </td>
       </tr>
       <tr>
-        <td>パスワード</td>
+        <td>体脂肪率 (%)</td>
         <td>
           <div class="mdl-textfield mdl-js-textfield">
-            <input type="password" class="mdl-textfield__input" name="password" id="password" required>
-            <label class="mdl-textfield__label" for="password"></label>
+            <input type="text" class="mdl-textfield__input" name="fat" id="fat">
+            <label class="mdl-textfield__label" for="fat"></label>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>右太ももの太さ (cm)</td>
+        <td>
+          <div class="mdl-textfield mdl-js-textfield">
+            <input type="text" class="mdl-textfield__input" name="right_thickness" id="right_thickness">
+            <label class="mdl-textfield__label" for="right_thickness"></label>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>左太ももの太さ (cm)</td>
+        <td>
+          <div class="mdl-textfield mdl-js-textfield">
+            <input type="text" class="mdl-textfield__input" name="left_thickness" id="left_thickness">
+            <label class="mdl-textfield__label" for="left_thickness"></label>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>日付</td>
+        <td>
+          <div class="mdl-textfield mdl-js-textfield">
+            <input type="text" class="mdl-textfield__input" name="figure_date" id="figure_date">
+            <label class="mdl-textfield__label" for="figure_date"></label>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
   <div class="form-button">
-    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">ログイン</button>
+    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">登録</button>
   </div>
 </form>
+{% endblock %}
+
+{% block script %}
+<script src="/static/js/figure.js"></script>
 {% endblock %}

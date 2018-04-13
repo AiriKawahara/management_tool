@@ -77,6 +77,7 @@ $(function() {
 
 /**
  * 今日からdays日後の日付を取得する。
+ * @param {number} days
  */
 function getDate(days = 0) {
   var date = new Date()
