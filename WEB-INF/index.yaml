@@ -31,8 +31,22 @@ indexes:
 
 - kind: figure
   properties:
-  - name: weight
-  - name: fat
-  - name: right_thickness
-  - name: left_thickness
-  - name: figure_date
+  - name: weight            # 体重
+  - name: right_thickness   # 右太ももの太さ
+  - name: left_thickness    # 左太ももの太さ
+  - name: figure_date       # 測定日
+
+- kind: figure2
+  properties:
+  - name: weight            # 体重
+  - name: fat               # 体脂肪率
+  - name: basal_metabolism  # 基礎代謝
+  - name: visceral_fat      # 内臓脂肪指数
+  - name: arm_fat           # うでの脂肪率
+  - name: leg_fat           # あしの脂肪率
+  - name: muscle            # 筋肉量
+  - name: arm_muscle        # うでの筋肉量
+  - name: leg_muscle        # あしの筋肉量
+  - name: moisture          # 水分率
+  - name: bone              # 骨量
+  - name: figure_date       # 測定日
