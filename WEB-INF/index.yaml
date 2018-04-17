@@ -31,7 +31,6 @@ indexes:
 
 - kind: figure
   properties:
-  - name: weight            # 体重
   - name: right_thickness   # 右太ももの太さ
   - name: left_thickness    # 左太ももの太さ
   - name: figure_date       # 測定日

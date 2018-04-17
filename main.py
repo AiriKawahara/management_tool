@@ -201,7 +201,6 @@ def figure():
 # 体型情報登録
 @app.route('/register_figure', methods=['POST'])
 def register_figure():
-  weight      = float(request.form['weight'])      if request.form['weight']      else None
   thickness_r = float(request.form['thickness_r']) if request.form['thickness_r'] else None
   thickness_l = float(request.form['thickness_l']) if request.form['thickness_l'] else None
   figure_date = request.form['figure_date']        if request.form['figure_date'] else None
@@ -213,7 +212,6 @@ def register_figure():
   if len(results) > 0:
     key = results[0].__dict__['key']
     # 入力値が空の場合はDBの値を保持する
-    weight      = weight      if weight      else results[0]['weight']
     thickness_r = thickness_r if thickness_r else results[0]['right_thickness']
     thickness_l = thickness_l if thickness_l else results[0]['left_thickness']
   else:
@@ -221,7 +219,6 @@ def register_figure():
 
   task = datastore.Entity(key)
   task.update({
-    'weight': weight,
     'right_thickness': thickness_r,
     'left_thickness': thickness_l,
     'figure_date': figure_date

@@ -20,7 +20,6 @@ $(function() {
 
   // 検索ボタン押下時処理
   $('.search').click(function() {
-    $('#chart_area').width('900px');
     $('#chart_area').height('500px');
     google.charts.load('current', {packages: ['corechart', 'line']});
     google.charts.setOnLoadCallback(getFigure);
@@ -67,8 +66,6 @@ function getFigure() {
       graphData.push(
         [
           val.figure_date,
-          val.weight,
-          val.fat,
           val.right_thickness,
           val.left_thickness
         ]
@@ -93,8 +90,6 @@ function getFigure() {
 function drawFigureGraph(graphData) {
   var data = new google.visualization.DataTable();
   data.addColumn('string', 'X');
-  data.addColumn('number', '体重 (kg)');
-  data.addColumn('number', '体脂肪率 (%)');
   data.addColumn('number', '右太もも (cm)');
   data.addColumn('number', '左太もも (cm)');
 
