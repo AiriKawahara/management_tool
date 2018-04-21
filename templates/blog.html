@@ -2,13 +2,15 @@
 
 {% block content %}
 <div style="margin: 0 20px 15px 20px;">
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for message in messages %}
-        <p class="error" style="margin: 10px 0 0;">{{ message }}</p>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
+  {% for category in categories %}
+    {% with messages = get_flashed_messages(category_filter=[category]) %}
+      {% if messages %}
+        {% for message in messages %}
+          <p class="{{ category }}" style="margin: 10px 0 0;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  {% endfor %}
   <h4 style="margin-top: 10px;">登録</h4>
   <form action="register_blog" method="post" enctype="multipart/form-data">
     <table class="center-table">
@@ -19,15 +21,6 @@
             <div class="mdl-textfield mdl-js-textfield">
               <input type="text" class="mdl-textfield__input" name="month" id="month" readonly>
               <label class="mdl-textfield__label" for="month"></label>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>投稿数</td>
-          <td>
-            <div class="mdl-textfield mdl-js-textfield">
-              <input type="number" class="mdl-textfield__input" name="posts_count" id="posts_count">
-              <label class="mdl-textfield__label" for="posts_count"></label>
             </div>
           </td>
         </tr>

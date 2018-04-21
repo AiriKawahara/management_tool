@@ -4,15 +4,17 @@
 <form action="login" method="post">
   <table class="form input-table">
     <tbody>
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-            <tr>
-              <td class="error" colspan="2">{{ message }}</td>
-            </tr>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
+      {% for category in categories %}
+        {% with messages = get_flashed_messages(category_filter=[category]) %}
+          {% if messages %}
+            {% for message in messages %}
+              <tr>
+                <td class="{{ category }}" colspan="2">{{ message }}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      {% endfor %}
       <tr>
         <td class="required">ログインID</td>
         <td>

@@ -57,9 +57,3 @@ indexes:
   - name: other_user_access # 自分以外のアクセス数
   - name: posts_count       # 投稿数
   - name: visitors_count    # 自分以外の訪問者数
-
-- kind: blog_detail
-  properties:
-  - name: month             # 対象月
-  - name: ip_address        # IPアドレス
-  - name: access            # アクセス数

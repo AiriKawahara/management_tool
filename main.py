@@ -14,6 +14,7 @@ app.secret_key = 'some secret key'
 
 CLIENT = datastore.Client('management-tool-y')
 JST = timezone(timedelta(hours=+9), 'JST')
+CATEGORIES = ['danger', 'warning', 'success']
 
 # ログイン画面
 @app.route('/')
@@ -23,7 +24,8 @@ def top():
   else:
     return render_template(
       'login.html',
-      title='ログイン')
+      title='ログイン',
+      categories=CATEGORIES)
 
 # ログイン処理
 @app.route('/login', methods=['POST'])
@@ -35,7 +37,7 @@ def login():
   if login_check:
     return redirect('/task')
   else:
-    flash('ログインIDまたはパスワードが不正です。')
+    flash('ログインIDまたはパスワードが不正です。', 'danger')
     return redirect('/')
 
 # ログアウト処理
@@ -69,7 +71,7 @@ def task():
   if start_date and end_date:
     search_tasks = get_search_tasks(all_tasks, start_date, end_date)
     if len(search_tasks) == 0:
-      flash('検索条件に一致するタスクが存在しません。')
+      flash('検索条件に一致するタスクが存在しません。', 'warning')
   else:
     search_tasks = []
 
@@ -80,7 +82,8 @@ def task():
     expired_tasks=expired_tasks,
     danger_tasks=danger_tasks,
     other_tasks=other_tasks,
-    search_tasks=search_tasks)
+    search_tasks=search_tasks,
+    categories=CATEGORIES)
 
 # タスク登録
 @app.route('/register_task', methods=['POST'])
@@ -94,7 +97,7 @@ def register_task():
   query.add_filter('deadline', '=', deadline)
   tasks = list(query.fetch())
   if len(tasks) > 0:
-    flash('すでに同じタスクが登録されています。')
+    flash('すでに同じタスクが登録されています。', 'danger')
     return redirect('/task')
 
   key = CLIENT.key('task')
@@ -104,6 +107,7 @@ def register_task():
     'deadline': deadline
   })
   CLIENT.put(task)
+  flash('タスクを登録しました。', 'success')
   return redirect('/task')
 
 # タスク完了
@@ -131,6 +135,7 @@ def complete_task():
   if len(target) > 0:
     key = target[0].__dict__['key']
     CLIENT.delete(key)
+  flash('タスクを完了しました。', 'success')
   return redirect('/task')
 
 # タスク編集
@@ -147,7 +152,7 @@ def edit_task():
   target = list(query.fetch())
 
   if len(target) == 0:
-    flash('タスクの更新に失敗しました。')
+    flash('タスクの更新に失敗しました。', 'danger')
     return redirect('/task')
 
   key = target[0].__dict__['key']
@@ -157,6 +162,7 @@ def edit_task():
     'deadline': new_deadline
   })
   CLIENT.put(task)
+  flash('タスクを更新しました。', 'success')
   return redirect('/task')
 
 # タスク削除
@@ -171,18 +177,22 @@ def delete_task():
   target = list(query.fetch())
 
   if len(target) == 0:
-    flash('タスクの削除に失敗しました。')
+    flash('タスクの削除に失敗しました。', 'danger')
     return redirect('/task')
 
   key = target[0].__dict__['key']
   CLIENT.delete(key)
+  flash('タスクを削除しました。', 'success')
   return redirect('/task')
 
 # 実績画面
 @app.route('/treated')
 def treated():
   if authentication_check():
-    return render_template('treated.html', title='実績')
+    return render_template(
+      'treated.html',
+      title='実績',
+      categories=CATEGORIES)
   else:
     return redirect('/')
 
@@ -190,7 +200,10 @@ def treated():
 @app.route('/training')
 def training():
   if authentication_check():
-    return render_template('training.html', title='トレーニング')
+    return render_template(
+      'training.html',
+      title='トレーニング',
+      categories=CATEGORIES)
   else:
     return redirect('/')
 
@@ -198,7 +211,10 @@ def training():
 @app.route('/figure')
 def figure():
   if authentication_check():
-    return render_template('figure.html', title='体型管理')
+    return render_template(
+      'figure.html',
+      title='体型管理',
+      categories=CATEGORIES)
   else:
     return redirect('/')
 
@@ -228,6 +244,7 @@ def register_figure():
     'figure_date': figure_date
   })
   CLIENT.put(task)
+  flash('体型情報を登録しました。', 'success')
   return redirect('/figure')
 
 #体型情報取得
@@ -242,7 +259,7 @@ def get_figure():
   results = list(query.fetch())
 
   if len(results) == 0:
-    flash('検索条件に一致するデータが存在しません。')
+    flash('検索条件に一致するデータが存在しません。', 'warning')
   
   return jsonify(results)
 
@@ -250,7 +267,10 @@ def get_figure():
 @app.route('/blog')
 def blog():
   if authentication_check():
-    return render_template('blog.html', title='ブログ管理')
+    return render_template(
+      'blog.html',
+      title='ブログ管理',
+      categories=CATEGORIES)
   else:
     return redirect('/')
 
@@ -261,31 +281,18 @@ def register_blog():
   ALLOWED_EXTENSIONS = set(['csv'])
   LIST_FILE = 'exclusion_list.csv'
 
-  exclusion_hosts = []
-  try:
-    with open(LIST_FILE, 'r') as f:
-      reader = csv.reader(f)
-      for row in reader:
-        if row:
-          exclusion_hosts.append(row[0])
-  except FileNotFoundError as e:
-    print(e)
-    flash('アクセス解析対象外ホスト名を取得することができません。')
-    return redirect('/blog')
-  except csv.Error as e:
-    print(e)
-    flash('アクセス解析対象外ホスト名を取得することができません。')
-    return redirect('/blog')
-
+  month = request.form['month']
   input_file = request.files['blog_data']
   filename = secure_filename(input_file.filename)
   check_extension = '.' in filename and \
     filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-  
+
   if check_extension is False:
-    flash('CSVファイルを指定してください。')
+    flash('CSVファイルを指定してください。', 'danger')
     return redirect('/blog')
-  
+
+  exclusion_hosts = get_exclusion_hosts(LIST_FILE)
+  key = get_blog_data(month)
   file_path = os.path.join(UPLOAD_FOLDER, filename)
   input_file.save(file_path)
 
@@ -297,25 +304,25 @@ def register_blog():
   try:
     with open(file_path, 'r', encoding=encoding) as f:
       reader = csv.reader(f)
-      for row in reader:
-        try:
-          host_name = socket.gethostbyaddr(row[0])[0]
-          if host_name.endswith('.au-net.ne.jp'):
-            print(row)
-          if host_name in exclusion_hosts:
-            print(row)
-        except socket.error:
-          continue
-        
+      blog_data = analysis_blog_data(reader, exclusion_hosts)
+      task = datastore.Entity(key)
+      task.update({
+        'month': month,
+        'total_access': blog_data['total_access'],
+        'other_user_access': blog_data['other_user_access'],
+        'posts_count': blog_data['posts_count'],
+        'visitors_count': blog_data['visitors_count']
+      })
+      CLIENT.put(task)
+    flash('ブログデータを登録しました。', 'success')
     return redirect('/blog')
-
   except FileNotFoundError as e:
     print(e)
-    flash('CSVファイルの読み込みに失敗しました。')
+    flash('CSVファイルの読み込みに失敗しました。', 'danger')
     return redirect('/blog')
   except csv.Error as e:
     print(e)
-    flash('CSVファイルの読み込みに失敗しました。')
+    flash('CSVファイルの読み込みに失敗しました。', 'danger')
     return redirect('/blog')
 
 # ユーザーの存在チェック
@@ -429,6 +436,65 @@ def get_search_tasks(all_tasks, start_date, end_date):
     if task['deadline'] >= start_date and task['deadline'] <= end_date:
       results.append(task)
   return sorted(results,key=lambda x:x["deadline"])
+
+# アクセス解析対象外ホスト名を取得
+def get_exclusion_hosts(file_path):
+  exclusion_hosts = []
+  try:
+    with open(file_path, 'r') as f:
+      reader = csv.reader(f)
+      for row in reader:
+        if row:
+          exclusion_hosts.append(row[0])
+  except FileNotFoundError as e:
+    print(e)
+    flash('アクセス解析対象外ホスト名を取得することができませんでした。', 'danger')
+  except csv.Error as e:
+    print(e)
+    flash('アクセス解析対象外ホスト名を取得することができませんでした。', 'danger')
+  return exclusion_hosts
+
+# 対象月のブログデータを取得
+def get_blog_data(month):
+  query = CLIENT.query(kind='blog')
+  query.add_filter('month', '=', month)
+  results = list(query.fetch())
+
+  if len(results) > 0:
+    key = results[0].__dict__['key']
+  else:
+    key = CLIENT.key('blog')
+
+  return key
+
+# ブログデータの解析を行う
+def analysis_blog_data(reader, exclusion_hosts):
+  total_access = 0
+  other_user_access = 0
+  visitors_count = 0
+  posts_count = None
+
+  for row in reader:
+    total_access += int(row[1])
+    if row[3]:
+      posts_count = row[3]
+    try:
+      host_name = socket.gethostbyaddr(row[0])[0]
+      if host_name.endswith('.au-net.ne.jp'):
+        continue
+      elif host_name in exclusion_hosts:
+        continue
+      other_user_access += int(row[1])
+      visitors_count += 1
+    except socket.error:
+      other_user_access += int(row[1])
+      visitors_count += 1
+
+  blog_data = {'total_access': total_access,
+    'other_user_access': other_user_access,
+    'visitors_count': visitors_count,
+    'posts_count': posts_count}
+  return blog_data
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8000)
