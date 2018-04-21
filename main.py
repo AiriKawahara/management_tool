@@ -1,13 +1,11 @@
 from datetime import datetime, timedelta, timezone
 from flask import Flask, render_template, request, redirect, session, flash, jsonify
-from werkzeug import secure_filename
 from google.cloud import datastore
+from task import Task
 from blog import Blog
 import hashlib
 import random
 import string
-import os
-import csv
 
 app = Flask(__name__)
 app.secret_key = 'some secret key'
@@ -64,12 +62,13 @@ def task():
   query = CLIENT.query(kind='task')
   all_tasks = list(query.fetch())
 
-  everyday_tasks = get_everyday_tasks(all_tasks)
-  expired_tasks = get_expired_tasks(all_tasks, today)
-  danger_tasks = get_danger_tasks(all_tasks, today)
-  other_tasks = get_other_tasks(all_tasks, today)
+  task = Task()
+  everyday_tasks = task.get_everyday_tasks(all_tasks)
+  expired_tasks  = task.get_expired_tasks(all_tasks, today)
+  danger_tasks   = task.get_danger_tasks(all_tasks, today)
+  other_tasks    = task.get_other_tasks(all_tasks, today)
   if start_date and end_date:
-    search_tasks = get_search_tasks(all_tasks, start_date, end_date)
+    search_tasks = task.get_search_tasks(all_tasks, start_date, end_date)
     if len(search_tasks) == 0:
       flash('検索条件に一致するタスクが存在しません。', 'warning')
   else:
@@ -277,54 +276,9 @@ def blog():
 # ブログデータ登録
 @app.route('/register_blog', methods=['POST'])
 def register_blog():
-  UPLOAD_FOLDER = './uploads'
-  ALLOWED_EXTENSIONS = set(['csv'])
-  LIST_FILE = 'exclusion_list.csv'
-
-  month = request.form['month']
-  input_file = request.files['blog_data']
-  filename = secure_filename(input_file.filename)
-  check_extension = '.' in filename and \
-    filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-  if check_extension is False:
-    flash('CSVファイルを指定してください。', 'danger')
-    return redirect('/blog')
-
   blog = Blog()
-  exclusion_hosts = blog.get_exclusion_hosts(LIST_FILE)
-  key = blog.get_blog_data(month)
-  file_path = os.path.join(UPLOAD_FOLDER, filename)
-  input_file.save(file_path)
-
-  # BOMありなしを見分ける
-  line_first = open(file_path, encoding='utf-8').readline()
-  is_with_bom = line_first[0] == '\ufeff'
-  encoding = 'utf-8-sig' if is_with_bom else 'utf-8'
-
-  try:
-    with open(file_path, 'r', encoding=encoding) as f:
-      reader = csv.reader(f)
-      blog_data = blog.analysis_blog_data(reader, exclusion_hosts)
-      task = datastore.Entity(key)
-      task.update({
-        'month': month,
-        'total_access': blog_data['total_access'],
-        'other_user_access': blog_data['other_user_access'],
-        'posts_count': blog_data['posts_count'],
-        'visitors_count': blog_data['visitors_count']
-      })
-      CLIENT.put(task)
-    flash('ブログデータを登録しました。', 'success')
-    return redirect('/blog')
-  except FileNotFoundError as e:
-    print(e)
-    flash('CSVファイルの読み込みに失敗しました。', 'danger')
-    return redirect('/blog')
-  except csv.Error as e:
-    print(e)
-    flash('CSVファイルの読み込みに失敗しました。', 'danger')
-    return redirect('/blog')
+  blog.main_function(request)
+  return redirect('/blog')
 
 # ユーザーの存在チェック
 def user_exists(login_id, password):
@@ -395,48 +349,6 @@ def delete_token():
   for target in targets:
     key = target.__dict__['key']
     CLIENT.delete(key)
-
-# 毎日のタスクを取得
-def get_everyday_tasks(all_tasks):
-  const_day = '2099-12-31'
-  results = []
-  for task in all_tasks:
-    if task['deadline'] == const_day:
-      results.append(task)
-  return results
-
-# 期限切れのタスクを取得
-def get_expired_tasks(all_tasks, today):
-  results = []
-  for task in all_tasks:
-    if task['deadline'] < today:
-      results.append(task)
-  return sorted(results,key=lambda x:x["deadline"])
-
-# 今日までのタスクを取得
-def get_danger_tasks(all_tasks, today):
-  results = []
-  for task in all_tasks:
-    if task['deadline'] == today:
-      results.append(task)
-  return results
-
-# 期日が今日以降のタスクを取得
-def get_other_tasks(all_tasks, today):
-  const_day = '2099-12-31'
-  results = []
-  for task in all_tasks:
-    if task['deadline'] > today and task['deadline'] != const_day:
-      results.append(task)
-  return sorted(results,key=lambda x:x["deadline"])
-
-# 検索範囲内のタスクを取得
-def get_search_tasks(all_tasks, start_date, end_date):
-  results = []
-  for task in all_tasks:
-    if task['deadline'] >= start_date and task['deadline'] <= end_date:
-      results.append(task)
-  return sorted(results,key=lambda x:x["deadline"])
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8000)
