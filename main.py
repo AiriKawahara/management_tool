@@ -1,11 +1,10 @@
 from datetime import datetime, timedelta, timezone
-from flask import Flask, render_template, request, redirect, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, session, flash
 from google.cloud import datastore
+from common import Common
 from task import Task
+from figure import Figure
 from blog import Blog
-import hashlib
-import random
-import string
 
 app = Flask(__name__)
 app.secret_key = 'some secret key'
@@ -17,7 +16,8 @@ CATEGORIES = ['danger', 'warning', 'success']
 # ログイン画面
 @app.route('/')
 def top():
-  if authentication_check():
+  common = Common()
+  if common.authentication_check():
     return redirect('/task')
   else:
     return render_template(
@@ -30,7 +30,8 @@ def top():
 def login():
   login_id = request.form['login_id']
   password = request.form['password']
-  login_check = user_exists(login_id, password)
+  common = Common()
+  login_check = common.user_exists(login_id, password)
 
   if login_check:
     return redirect('/task')
@@ -48,7 +49,8 @@ def logout():
 # タスク管理画面
 @app.route('/task')
 def task():
-  if not authentication_check():
+  common = Common()
+  if not common.authentication_check():
     return redirect('/')
 
   # 今日の日付を取得
@@ -87,107 +89,36 @@ def task():
 # タスク登録
 @app.route('/register_task', methods=['POST'])
 def register_task():
-  task_name = request.form['task_name_input']
-  deadline = request.form['deadline_input']
-
-  # すでに同じタスクが登録されている場合は登録しない
-  query = CLIENT.query(kind='task')
-  query.add_filter('task_name', '=', task_name)
-  query.add_filter('deadline', '=', deadline)
-  tasks = list(query.fetch())
-  if len(tasks) > 0:
-    flash('すでに同じタスクが登録されています。', 'danger')
-    return redirect('/task')
-
-  key = CLIENT.key('task')
-  task = datastore.Entity(key)
-  task.update({
-    'task_name': task_name,
-    'deadline': deadline
-  })
-  CLIENT.put(task)
-  flash('タスクを登録しました。', 'success')
+  task = Task()
+  task.register_task(request)
   return redirect('/task')
 
 # タスク完了
 @app.route('/complete_task', methods=['POST'])
 def complete_task():
-  task_name = request.form['task_name']
-  deadline = request.form['deadline']
-  complete_date = request.form['complete_date']
-
-  # 実績登録
-  key = CLIENT.key('treated')
-  task = datastore.Entity(key)
-  task.update({
-    'task_name': task_name,
-    'treated_date': complete_date,
-    'deadline': deadline
-  })
-  CLIENT.put(task)
-
-  # タスク削除
-  query = CLIENT.query(kind='task')
-  query.add_filter('task_name', '=', task_name)
-  query.add_filter('deadline', '=', deadline)
-  target = list(query.fetch())
-  if len(target) > 0:
-    key = target[0].__dict__['key']
-    CLIENT.delete(key)
-  flash('タスクを完了しました。', 'success')
+  task = Task()
+  task.complete_task(request)
   return redirect('/task')
 
 # タスク編集
 @app.route('/edit_task', methods=['POST'])
 def edit_task():
-  old_task_name = request.form['old_task_name']
-  new_task_name = request.form['new_task_name']
-  old_deadline = request.form['old_deadline']
-  new_deadline = request.form['new_deadline']
-
-  query = CLIENT.query(kind='task')
-  query.add_filter('task_name', '=', old_task_name)
-  query.add_filter('deadline', '=', old_deadline)
-  target = list(query.fetch())
-
-  if len(target) == 0:
-    flash('タスクの更新に失敗しました。', 'danger')
-    return redirect('/task')
-
-  key = target[0].__dict__['key']
-  task = datastore.Entity(key)
-  task.update({
-    'task_name': new_task_name,
-    'deadline': new_deadline
-  })
-  CLIENT.put(task)
-  flash('タスクを更新しました。', 'success')
+  task = Task()
+  task.edit_task(request)
   return redirect('/task')
 
 # タスク削除
 @app.route('/delete_task', methods=['POST'])
 def delete_task():
-  task_name = request.form['task_name']
-  deadline = request.form['deadline']
-
-  query = CLIENT.query(kind='task')
-  query.add_filter('task_name', '=', task_name)
-  query.add_filter('deadline', '=', deadline)
-  target = list(query.fetch())
-
-  if len(target) == 0:
-    flash('タスクの削除に失敗しました。', 'danger')
-    return redirect('/task')
-
-  key = target[0].__dict__['key']
-  CLIENT.delete(key)
-  flash('タスクを削除しました。', 'success')
+  task = Task()
+  task.delete_task(request)
   return redirect('/task')
 
 # 実績画面
 @app.route('/treated')
 def treated():
-  if authentication_check():
+  common = Common()
+  if common.authentication_check():
     return render_template(
       'treated.html',
       title='実績',
@@ -198,7 +129,8 @@ def treated():
 # トレーニング画面
 @app.route('/training')
 def training():
-  if authentication_check():
+  common = Common()
+  if common.authentication_check():
     return render_template(
       'training.html',
       title='トレーニング',
@@ -209,7 +141,8 @@ def training():
 # 体型管理画面
 @app.route('/figure')
 def figure():
-  if authentication_check():
+  common = Common()
+  if common.authentication_check():
     return render_template(
       'figure.html',
       title='体型管理',
@@ -220,52 +153,22 @@ def figure():
 # 体型情報登録
 @app.route('/register_figure', methods=['POST'])
 def register_figure():
-  thickness_r = float(request.form['thickness_r']) if request.form['thickness_r'] else None
-  thickness_l = float(request.form['thickness_l']) if request.form['thickness_l'] else None
-  figure_date = request.form['figure_date']        if request.form['figure_date'] else None
-
-  query = CLIENT.query(kind='figure')
-  query.add_filter('figure_date', '=', figure_date)
-  results = list(query.fetch())
-
-  if len(results) > 0:
-    key = results[0].__dict__['key']
-    # 入力値が空の場合はDBの値を保持する
-    thickness_r = thickness_r if thickness_r else results[0]['right_thickness']
-    thickness_l = thickness_l if thickness_l else results[0]['left_thickness']
-  else:
-    key = CLIENT.key('figure')
-
-  task = datastore.Entity(key)
-  task.update({
-    'right_thickness': thickness_r,
-    'left_thickness': thickness_l,
-    'figure_date': figure_date
-  })
-  CLIENT.put(task)
-  flash('体型情報を登録しました。', 'success')
+  figure = Figure()
+  figure.register_figure(request)
   return redirect('/figure')
 
 #体型情報取得
 @app.route('/get_figure', methods=['GET'])
 def get_figure():
-  figure_start_date = request.args['figure_start_date']
-  figure_end_date   = request.args['figure_end_date']
-
-  query = CLIENT.query(kind='figure')
-  query.add_filter('figure_date', '>=', figure_start_date)
-  query.add_filter('figure_date', '<=', figure_end_date)
-  results = list(query.fetch())
-
-  if len(results) == 0:
-    flash('検索条件に一致するデータが存在しません。', 'warning')
-  
-  return jsonify(results)
+  figure = Figure()
+  data = figure.get_figure(request)
+  return data
 
 # ブログ管理画面
 @app.route('/blog')
 def blog():
-  if authentication_check():
+  common = Common()
+  if common.authentication_check():
     return render_template(
       'blog.html',
       title='ブログ管理',
@@ -279,76 +182,6 @@ def register_blog():
   blog = Blog()
   blog.main_function(request)
   return redirect('/blog')
-
-# ユーザーの存在チェック
-def user_exists(login_id, password):
-  # 入力されたパスワードを暗号化
-  encode_password = password.encode('utf-8')
-  hashed_password = hashlib.sha256(encode_password).hexdigest()
-  
-  query = CLIENT.query(kind='users')
-  query.add_filter('login_id', '=', login_id)
-  query.add_filter('password', '=', hashed_password)
-  users = list(query.fetch())
-
-  if len(users) == 0:
-    return False
-  else:
-    # トークンを生成
-    letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    token = ''.join([random.choice(letters) for _ in range(32)])
-    expiration_datetime = datetime.now(JST) + timedelta(days=+1)
-
-    # トークンが既にDatastoreに登録されていないかチェック
-    delete_token()
-    query = CLIENT.query(kind='auth')
-    query.add_filter('token', '=', token)
-    results = list(query.fetch())
-
-    if len(results) != 0:
-      print("Token duplication error")
-      return False
-
-    # トークンを保存(有効期限は24時間)
-    key = CLIENT.key('auth')
-    task = datastore.Entity(key)
-    task.update({
-      'login_id': login_id,
-      'token': token,
-      'expiration_datetime': expiration_datetime
-    })
-    CLIENT.put(task)
-    # セッションにトークンを保存
-    session['login_token'] = token
-    return True
-
-# 認証チェックを行う
-def authentication_check():
-  if not 'login_token' in session:
-    return False
-
-  # セッションに保存されているトークンが有効かどうか確認
-  delete_token()
-  login_token = session['login_token']
-  query = CLIENT.query(kind='auth')
-  query.add_filter('token', '=', login_token)
-  results = list(query.fetch())
-
-  if len(results) == 0:
-    return False
-  else:
-    return True
-
-# 有効期限切れのトークンをDatastoreから削除
-def delete_token():
-  now = datetime.now(JST)
-  query = CLIENT.query(kind='auth')
-  query.add_filter('expiration_datetime', '<', now)
-  targets = list(query.fetch())
-
-  for target in targets:
-    key = target.__dict__['key']
-    CLIENT.delete(key)
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8000)
