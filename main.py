@@ -1,9 +1,13 @@
 from datetime import datetime, timedelta, timezone
 from flask import Flask, render_template, request, redirect, session, flash, jsonify
+from werkzeug import secure_filename
 from google.cloud import datastore
 import hashlib
 import random
 import string
+import os
+import csv
+import socket
 
 app = Flask(__name__)
 app.secret_key = 'some secret key'
@@ -249,6 +253,70 @@ def blog():
     return render_template('blog.html', title='ブログ管理')
   else:
     return redirect('/')
+
+# ブログデータ登録
+@app.route('/register_blog', methods=['POST'])
+def register_blog():
+  UPLOAD_FOLDER = './uploads'
+  ALLOWED_EXTENSIONS = set(['csv'])
+  LIST_FILE = 'exclusion_list.csv'
+
+  exclusion_hosts = []
+  try:
+    with open(LIST_FILE, 'r') as f:
+      reader = csv.reader(f)
+      for row in reader:
+        if row:
+          exclusion_hosts.append(row[0])
+  except FileNotFoundError as e:
+    print(e)
+    flash('アクセス解析対象外ホスト名を取得することができません。')
+    return redirect('/blog')
+  except csv.Error as e:
+    print(e)
+    flash('アクセス解析対象外ホスト名を取得することができません。')
+    return redirect('/blog')
+
+  input_file = request.files['blog_data']
+  filename = secure_filename(input_file.filename)
+  check_extension = '.' in filename and \
+    filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+  
+  if check_extension is False:
+    flash('CSVファイルを指定してください。')
+    return redirect('/blog')
+  
+  file_path = os.path.join(UPLOAD_FOLDER, filename)
+  input_file.save(file_path)
+
+  # BOMありなしを見分ける
+  line_first = open(file_path, encoding='utf-8').readline()
+  is_with_bom = line_first[0] == '\ufeff'
+  encoding = 'utf-8-sig' if is_with_bom else 'utf-8'
+
+  try:
+    with open(file_path, 'r', encoding=encoding) as f:
+      reader = csv.reader(f)
+      for row in reader:
+        try:
+          host_name = socket.gethostbyaddr(row[0])[0]
+          if host_name.endswith('.au-net.ne.jp'):
+            print(row)
+          if host_name in exclusion_hosts:
+            print(row)
+        except socket.error:
+          continue
+        
+    return redirect('/blog')
+
+  except FileNotFoundError as e:
+    print(e)
+    flash('CSVファイルの読み込みに失敗しました。')
+    return redirect('/blog')
+  except csv.Error as e:
+    print(e)
+    flash('CSVファイルの読み込みに失敗しました。')
+    return redirect('/blog')
 
 # ユーザーの存在チェック
 def user_exists(login_id, password):

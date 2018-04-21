@@ -1,5 +1,50 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div style="margin: 0 20px 15px 20px;">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <p class="error" style="margin: 10px 0 0;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  <h4 style="margin-top: 10px;">登録</h4>
+  <form action="register_blog" method="post" enctype="multipart/form-data">
+    <table class="center-table">
+      <tbody>
+        <tr>
+          <td>対象月</td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="text" class="mdl-textfield__input" name="month" id="month" readonly>
+              <label class="mdl-textfield__label" for="month"></label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>投稿数</td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input type="number" class="mdl-textfield__input" name="posts_count" id="posts_count">
+              <label class="mdl-textfield__label" for="posts_count"></label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <input type="file" name="blog_data" style="margin: 10px 0 20px;" required>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-button">
+      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">登録</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
 
+{% block script %}
+<script src="/static/js/blog.js"></script>
 {% endblock %}
