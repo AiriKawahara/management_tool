@@ -2,12 +2,12 @@ from datetime import datetime, timedelta, timezone
 from flask import Flask, render_template, request, redirect, session, flash, jsonify
 from werkzeug import secure_filename
 from google.cloud import datastore
+from blog import Blog
 import hashlib
 import random
 import string
 import os
 import csv
-import socket
 
 app = Flask(__name__)
 app.secret_key = 'some secret key'
@@ -291,8 +291,9 @@ def register_blog():
     flash('CSVファイルを指定してください。', 'danger')
     return redirect('/blog')
 
-  exclusion_hosts = get_exclusion_hosts(LIST_FILE)
-  key = get_blog_data(month)
+  blog = Blog()
+  exclusion_hosts = blog.get_exclusion_hosts(LIST_FILE)
+  key = blog.get_blog_data(month)
   file_path = os.path.join(UPLOAD_FOLDER, filename)
   input_file.save(file_path)
 
@@ -304,7 +305,7 @@ def register_blog():
   try:
     with open(file_path, 'r', encoding=encoding) as f:
       reader = csv.reader(f)
-      blog_data = analysis_blog_data(reader, exclusion_hosts)
+      blog_data = blog.analysis_blog_data(reader, exclusion_hosts)
       task = datastore.Entity(key)
       task.update({
         'month': month,
@@ -436,65 +437,6 @@ def get_search_tasks(all_tasks, start_date, end_date):
     if task['deadline'] >= start_date and task['deadline'] <= end_date:
       results.append(task)
   return sorted(results,key=lambda x:x["deadline"])
-
-# アクセス解析対象外ホスト名を取得
-def get_exclusion_hosts(file_path):
-  exclusion_hosts = []
-  try:
-    with open(file_path, 'r') as f:
-      reader = csv.reader(f)
-      for row in reader:
-        if row:
-          exclusion_hosts.append(row[0])
-  except FileNotFoundError as e:
-    print(e)
-    flash('アクセス解析対象外ホスト名を取得することができませんでした。', 'danger')
-  except csv.Error as e:
-    print(e)
-    flash('アクセス解析対象外ホスト名を取得することができませんでした。', 'danger')
-  return exclusion_hosts
-
-# 対象月のブログデータを取得
-def get_blog_data(month):
-  query = CLIENT.query(kind='blog')
-  query.add_filter('month', '=', month)
-  results = list(query.fetch())
-
-  if len(results) > 0:
-    key = results[0].__dict__['key']
-  else:
-    key = CLIENT.key('blog')
-
-  return key
-
-# ブログデータの解析を行う
-def analysis_blog_data(reader, exclusion_hosts):
-  total_access = 0
-  other_user_access = 0
-  visitors_count = 0
-  posts_count = None
-
-  for row in reader:
-    total_access += int(row[1])
-    if row[3]:
-      posts_count = row[3]
-    try:
-      host_name = socket.gethostbyaddr(row[0])[0]
-      if host_name.endswith('.au-net.ne.jp'):
-        continue
-      elif host_name in exclusion_hosts:
-        continue
-      other_user_access += int(row[1])
-      visitors_count += 1
-    except socket.error:
-      other_user_access += int(row[1])
-      visitors_count += 1
-
-  blog_data = {'total_access': total_access,
-    'other_user_access': other_user_access,
-    'visitors_count': visitors_count,
-    'posts_count': posts_count}
-  return blog_data
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8000)
