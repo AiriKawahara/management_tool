@@ -1,20 +1,20 @@
 $(function() {
   $('#figure_date').flatpickr({
     enableTime: false,
-    dateFormat: "Y-m-d",
+    dateFormat: 'Y-m-d',
     maxDate: getDate(),
     defaultDate: getDate()
   });
 
   $('#figure_start_date').flatpickr({
     enableTime: false,
-    dateFormat: "Y-m-d",
+    dateFormat: 'Y-m-d',
     defaultDate: getDate(-14)
   });
 
   $('#figure_end_date').flatpickr({
     enableTime: false,
-    dateFormat: "Y-m-d",
+    dateFormat: 'Y-m-d',
     defaultDate: getDate()
   });
 

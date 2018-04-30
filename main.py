@@ -183,5 +183,12 @@ def register_blog():
   blog.main_function(request)
   return redirect('/blog')
 
+# ブログデータ取得
+@app.route('/get_blog', methods=['GET'])
+def get_blog():
+  blog = Blog()
+  data = blog.get_blog(request)
+  return data
+
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8000)

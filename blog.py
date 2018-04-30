@@ -1,4 +1,4 @@
-from flask import Flask, request, flash
+from flask import Flask, request, flash, jsonify
 from google.cloud import datastore
 from werkzeug import secure_filename
 import os
@@ -129,3 +129,18 @@ class Blog:
       flash('CSVファイルのフォーマットが正しくありません。', 'danger')
     except:
       flash('予期せぬエラーが発生しました。')
+
+  # ユーザーがブログデータ検索を行った際に実行される関数
+  def get_blog(self, request):
+    blog_start_month = request.args['blog_start_month']
+    blog_end_month   = request.args['blog_end_month']
+
+    query = self.client.query(kind='blog')
+    query.add_filter('month', '>=', blog_start_month)
+    query.add_filter('month', '<=', blog_end_month)
+    results = list(query.fetch())
+
+    if len(results) == 0:
+      flash('検索条件に一致するデータが存在しません。', 'warning')
+
+    return jsonify(results)

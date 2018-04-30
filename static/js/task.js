@@ -2,26 +2,26 @@ $(function() {
   // datepicker設定値
   $('#deadline_input').flatpickr({
     enableTime: false,
-    dateFormat: "Y-m-d",
+    dateFormat: 'Y-m-d',
     minDate: getDate(),
     defaultDate: getDate()
   });
 
   $('#start_date_input').flatpickr({
     enableTime: false,
-    dateFormat: "Y-m-d",
+    dateFormat: 'Y-m-d',
     defaultDate: getDate()
   });
 
   $('#end_date_input').flatpickr({
     enableTime: false,
-    dateFormat: "Y-m-d",
+    dateFormat: 'Y-m-d',
     defaultDate: getDate(7)
   });
 
   $('#complete_date').flatpickr({
     enableTime: false,
-    dateFormat: "Y-m-d",
+    dateFormat: 'Y-m-d',
     maxDate: getDate(),
     defaultDate: getDate()
   });

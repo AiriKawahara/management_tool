@@ -35,9 +35,34 @@
       <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">登録</button>
     </div>
   </form>
+
+  <h4>閲覧</h4>
+  <table class="center-table">
+    <tbody>
+      <tr>
+        <td>
+          <div class="mdl-textfield mdl-js-textfield">
+            <input type="text" class="mdl-textfield__input flatpickr-input" name="blog_start_month" id="blog_start_month" readonly>
+            <label class="mdl-textfield__label" for="blog_start_month"></label>
+          </div>
+        </td>
+        <td>
+          <div class="mdl-textfield mdl-js-textfield">
+            <input type="text" class="mdl-textfield__input flatpickr-input" name="blog_end_month" id="blog_end_month" readonly>
+            <label class="mdl-textfield__label" for="blog_end_month"></label>
+          </div>
+        </td>
+        <td>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored search">検索</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div id="chart_area"></div>
 </div>
 {% endblock %}
 
 {% block script %}
+<script src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="/static/js/blog.js"></script>
 {% endblock %}
