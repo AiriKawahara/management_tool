@@ -6,7 +6,7 @@
     {% with messages = get_flashed_messages(category_filter=[category]) %}
       {% if messages %}
         {% for message in messages %}
-          <p class="{{ category }}" style="margin: 10px 0 0;">{{ message }}</p>
+          <p class="{{ category }} message">{{ message }}</p>
         {% endfor %}
       {% endif %}
     {% endwith %}

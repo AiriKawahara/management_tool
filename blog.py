@@ -27,7 +27,7 @@ class Blog:
 
     self.get_exclusion_hosts()
     self.get_blog_data()
-    self.file_path       = os.path.join(self.upload_folder, self.filename)
+    self.file_path = os.path.join(self.upload_folder, self.filename)
     self.input_file.save(self.file_path)
 
     # BOMありなしを判別
@@ -86,35 +86,46 @@ class Blog:
     except csv.Error as e:
       print(e)
       flash('CSVファイルの読み込みに失敗しました。', 'danger')
+    except:
+      flash('予期せぬエラーが発生しました。', 'danger')
 
   # ブログデータの解析を行う
   def analysis_blog_data(self):
-    self.total_access      = 0
-    self.other_user_access = 0
-    self.visitors_count    = 0
-    self.posts_count       = self.line_first.split(',')[3]
+    try:
+      self.total_access      = 0
+      self.other_user_access = 0
+      self.visitors_count    = 0
+      self.posts_count       = self.line_first.split(',')[3]
 
-    for row in self.reader:
-      if row is None:
-        continue
-      self.total_access += int(row[1])
-      try:
-        self.host_name = socket.gethostbyaddr(row[0])[0]
-        if self.host_name.endswith('.au-net.ne.jp'):
-          print(row)
+      for row in self.reader:
+        if row is None:
           continue
-        elif self.host_name in self.exclusion_hosts:
-          print(row)
-          continue
-        self.other_user_access += int(row[1])
-        self.visitors_count    += 1
-      except socket.error:
-        self.other_user_access += int(row[1])
-        self.visitors_count    += 1
+        self.total_access += int(row[1])
+        try:
+          self.host_name = socket.gethostbyaddr(row[0])[0]
+          if self.host_name.endswith('.au-net.ne.jp'):
+            print(row)
+            continue
+          elif self.host_name in self.exclusion_hosts:
+            print(row)
+            continue
+          self.other_user_access += int(row[1])
+          self.visitors_count    += 1
+        except socket.error:
+          self.other_user_access += int(row[1])
+          self.visitors_count    += 1
 
-    self.blog_data = {
-      'total_access':      self.total_access,
-      'other_user_access': self.other_user_access,
-      'visitors_count':    self.visitors_count,
-      'posts_count':       self.posts_count
-    }
+      self.blog_data = {
+        'total_access':      self.total_access,
+        'other_user_access': self.other_user_access,
+        'visitors_count':    self.visitors_count,
+        'posts_count':       self.posts_count
+      }
+    except IndexError as e:
+      print(e)
+      flash('CSVファイルのフォーマットが正しくありません。', 'danger')
+    except ValueError as e:
+      print(e)
+      flash('CSVファイルのフォーマットが正しくありません。', 'danger')
+    except:
+      flash('予期せぬエラーが発生しました。')
