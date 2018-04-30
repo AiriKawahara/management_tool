@@ -2,6 +2,7 @@ $(function() {
   $('#month, #blog_end_month').flatpickr({
     enableTime: false,
     dateFormat: 'Y/m',
+    minDate: '2018/01',
     maxDate: getDate(),
     defaultDate: getDate()
   });
@@ -9,6 +10,8 @@ $(function() {
   $('#blog_start_month').flatpickr({
     enableTime: false,
     dateFormat: 'Y/m',
+    minDate: '2018/01',
+    maxDate: getDate(),
     defaultDate: '2018/01'
   });
 
