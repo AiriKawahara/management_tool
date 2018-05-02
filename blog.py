@@ -13,25 +13,32 @@ class Blog:
   def main_function(self, request):
     self.upload_folder      = './uploads'
     self.allowed_extensions = set(['csv'])
-    self.host_file_path     = 'exclusion_list.csv'
 
-    self.month      = request.form['month']
-    self.input_file = request.files['blog_data']
-    self.filename   = secure_filename(self.input_file.filename)
-    self.check_extension = '.' in self.filename and \
-      self.filename.rsplit('.', 1)[1] in self.allowed_extensions
+    self.month     = request.form['month']
+    self.blog_file = request.files['blog_data']
+    self.host_file = request.files['host_data']
+    self.blog_file_name = secure_filename(self.blog_file.filename)
+    self.host_file_name = secure_filename(self.host_file.filename)
+    self.check_blog_ext = '.' in self.blog_file_name and \
+      self.blog_file_name.rsplit('.', 1)[1] in self.allowed_extensions
+    self.check_host_ext = '.' in self.host_file_name and \
+      self.host_file_name.rsplit('.', 1)[1] in self.allowed_extensions
 
-    if self.check_extension is False:
+    if self.check_blog_ext is False or self.check_host_ext is False:
       flash('CSVファイルを指定してください。', 'danger')
       return
 
+    self.blog_file_path = os.path.join(self.upload_folder, self.blog_file_name)
+    self.host_file_path = os.path.join(self.upload_folder, self.host_file_name)
+
+    self.blog_file.save(self.blog_file_path)
+    self.host_file.save(self.host_file_path)
+
     self.get_exclusion_hosts()
     self.get_blog_data()
-    self.file_path = os.path.join(self.upload_folder, self.filename)
-    self.input_file.save(self.file_path)
 
     # BOMありなしを判別
-    self.line_first  = open(self.file_path, encoding='utf-8').readline()
+    self.line_first  = open(self.blog_file_path, encoding='utf-8').readline()
     self.is_with_bom = self.line_first[0] == '\ufeff'
     self.encoding    = 'utf-8-sig' if self.is_with_bom else 'utf-8'
 
@@ -67,7 +74,7 @@ class Blog:
   # ブログデータをDatastoreに登録する
   def register_blog(self):
     try:
-      with open(self.file_path, 'r', encoding=self.encoding) as f:
+      with open(self.blog_file_path, 'r', encoding=self.encoding) as f:
         self.reader = csv.reader(f)
         self.analysis_blog_data()
         self.task = datastore.Entity(self.key)
@@ -79,6 +86,8 @@ class Blog:
           'visitors_count':    self.blog_data['visitors_count']
         })
         self.client.put(self.task)
+      os.remove(self.blog_file_path)
+      os.remove(self.host_file_path)
       flash('ブログデータを登録しました。', 'success')
     except FileNotFoundError as e:
       print(e)
@@ -95,7 +104,7 @@ class Blog:
       self.total_access      = 0
       self.other_user_access = 0
       self.visitors_count    = 0
-      self.posts_count       = self.line_first.split(',')[3]
+      self.posts_count       = int(self.line_first.split(',')[3])
 
       for row in self.reader:
         if row is None:
