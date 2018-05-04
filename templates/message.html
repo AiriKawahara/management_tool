@@ -1,0 +1,18 @@
+{% for category in categories %}
+  {% with messages = get_flashed_messages(category_filter=[category]) %}
+    {% if messages %}
+      {% for message in messages %}
+        <p class="message">
+          {% if category == 'danger' %}
+          <i class="material-icons expired-icon">error</i>
+          {% elif category == 'warning' %}
+          <i class="material-icons danger-icon">warning</i>
+          {% elif category == 'success' %}
+          <i class="material-icons success-icon">done</i>
+          {% endif %}
+          <span>{{ message }}</span>
+        </p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+{% endfor %}

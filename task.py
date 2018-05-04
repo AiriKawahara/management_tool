@@ -8,7 +8,7 @@ class Task:
   # タスク登録
   def register_task(self, request):
     task_name = request.form['task_name_input']
-    deadline = request.form['deadline_input']
+    deadline  = request.form['deadline_input']
 
     # すでに同じタスクが登録されている場合は登録しない
     query = self.client.query(kind='task')
@@ -58,8 +58,8 @@ class Task:
   def edit_task(self, request):
     old_task_name = request.form['old_task_name']
     new_task_name = request.form['new_task_name']
-    old_deadline = request.form['old_deadline']
-    new_deadline = request.form['new_deadline']
+    old_deadline  = request.form['old_deadline']
+    new_deadline  = request.form['new_deadline']
 
     query = self.client.query(kind='task')
     query.add_filter('task_name', '=', old_task_name)
@@ -82,7 +82,7 @@ class Task:
   # タスク削除
   def delete_task(self, request):
     task_name = request.form['task_name']
-    deadline = request.form['deadline']
+    deadline  = request.form['deadline']
 
     query = self.client.query(kind='task')
     query.add_filter('task_name', '=', task_name)
@@ -125,7 +125,7 @@ class Task:
   # 期日が今日以降のタスクを取得
   def get_other_tasks(self, all_tasks, today):
     const_day = '2099-12-31'
-    results = []
+    results   = []
     for task in all_tasks:
       if task['deadline'] > today and task['deadline'] != const_day:
         results.append(task)

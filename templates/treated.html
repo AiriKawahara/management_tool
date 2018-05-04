@@ -1,4 +1,24 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div style="margin: 20px 20px 15px 20px;">
+  <table class="mdl-data-table mdl-js-data-table center-table left-table">
+    <thead>
+      <tr>
+        <th>タスク名</th>
+        <th>期日</th>
+        <th>完了日</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in tasks %}
+      <tr>
+        <td class="task_name">{{ task.task_name }}</td>
+        <td>{{ task.deadline }}</td>
+        <td>{{ task.treated_date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

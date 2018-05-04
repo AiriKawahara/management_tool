@@ -2,15 +2,7 @@
 
 {% block content %}
 <div style="margin: 0 20px 15px 20px;">
-  {% for category in categories %}
-    {% with messages = get_flashed_messages(category_filter=[category]) %}
-      {% if messages %}
-        {% for message in messages %}
-          <p class="{{ category }} message">{{ message }}</p>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-  {% endfor %}
+  {% include "message.html" %}
   <h4 style="margin-top: 10px;">登録</h4>
   <form action="register_blog" method="post" enctype="multipart/form-data">
     <table class="center-table">

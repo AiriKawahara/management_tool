@@ -118,13 +118,17 @@ def delete_task():
 @app.route('/treated')
 def treated():
   common = Common()
-  if common.authentication_check():
-    return render_template(
-      'treated.html',
-      title='実績',
-      categories=CATEGORIES)
-  else:
+  if not common.authentication_check():
     return redirect('/')
+
+  query   = CLIENT.query(kind='treated')
+  results = list(query.fetch())
+  results = sorted(results,key=lambda x:x["treated_date"],reverse=True)
+  return render_template(
+    'treated.html',
+    title='実績',
+    tasks=results,
+    categories=CATEGORIES)
 
 # トレーニング画面
 @app.route('/training')

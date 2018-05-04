@@ -45,12 +45,12 @@ h4 {
   color: #ff0000;
 }
 
-.danger {
-  color: #dc3545;
-}
-
 .message:first-child {
   margin: 10px 0 0;
+}
+
+.danger {
+  color: #dc3545;
 }
 
 .warning {
@@ -79,16 +79,17 @@ h4 {
 
 .expired-icon {
   color: #ff0000;
-  vertical-align:top;
+  vertical-align: middle;
 }
 
 .danger-icon {
   color: #f39700;
-  vertical-align:top;
+  vertical-align: middle;
 }
 
-.task_name span {
-  line-height: 24px;
+.success-icon {
+  color: #008000;
+  vertical-align: middle;
 }
 
 #chart_area {
