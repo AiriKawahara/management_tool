@@ -190,5 +190,16 @@ def get_blog():
   data = blog.get_blog(request)
   return data
 
+# 持ち物リスト画面
+@app.route('/belongings')
+def belongings():
+  common = Common()
+  if common.authentication_check():
+    return render_template(
+      'belongings.html',
+      title='持ち物リスト')
+  else:
+    return redirect('/')
+
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8000)

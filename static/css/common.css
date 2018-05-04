@@ -1,3 +1,7 @@
+body {
+  background-color: #fdeff2;
+}
+
 td {
   padding: 0 10px;
 }
@@ -65,12 +69,26 @@ h4 {
   text-align: left;
 }
 
-.edit, .complete, .delete {
+.complete, .delete {
   padding: 0 10px;
 }
 
 .complete, .delete {
   margin-left: 10px;
+}
+
+.expired-icon {
+  color: #ff0000;
+  vertical-align:top;
+}
+
+.danger-icon {
+  color: #f39700;
+  vertical-align:top;
+}
+
+.task_name span {
+  line-height: 24px;
 }
 
 #chart_area {
@@ -111,12 +129,60 @@ h4 {
 }
 
 .mdl-data-table .option {
-  width: 180px;
+  width: 122px;
 }
 
 .mdl-data-table .option_everyday {
-  width: 122px;
+  width: 64px;
 }
+
+.expand-icon {
+  vertical-align: middle;
+}
+
+.expand-icon:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+/* 持ち物リスト画面 */
+.belongings {
+  margin: 10px;
+}
+
+.belongings h1 {
+  margin: 0;
+  font-size: 2em;
+}
+
+.belongings h4 {
+  margin: 0;
+  font-size: 1.5em;
+  text-indent: 0.3em;
+}
+
+.belongings div:not(:last-child) {
+  margin-bottom: 15px;
+}
+
+.gym {
+  margin-bottom: 20px;
+}
+
+.gym label {
+  display: block;
+  width: 0; /* エリア外クリック時にチェックが入らないようにするため */
+  text-indent: 1em;
+  white-space: nowrap;
+}
+
+.two-days label {
+  display: block;
+  width: 0; /* エリア外クリック時にチェックが入らないようにするため */
+  text-indent: 2em;
+  white-space: nowrap;
+}
+/* 持ち物リスト画面ここまで */
 
 @media (max-width: 767px) {
   .pc {

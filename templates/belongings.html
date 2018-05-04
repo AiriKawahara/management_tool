@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="belongings">
+  <form class="gym">
+    <h1><i class="material-icons expand-icon open">expand_more</i>スポーツジム</h1>
+    <div>
+      <label><input type="checkbox">シューズ</label>
+      <label><input type="checkbox">Tシャツ</label>
+      <label><input type="checkbox">ズボン</label>
+      <label><input type="checkbox">キャミソール</label>
+      <label><input type="checkbox">靴下</label>
+      <label><input type="checkbox">ヘアゴム</label>
+      <label><input type="checkbox">汗拭きタオル</label>
+      <label><input type="checkbox">お風呂タオル</label>
+      <label><input type="checkbox">洗顔料</label>
+      <label><input type="checkbox">シート</label>
+      <label><input type="checkbox">帰り用下着</label>
+    </div>
+  </form>
+  <form class="two-days">
+    <h1><i class="material-icons expand-icon open">expand_more</i>1泊2日の旅行</h1>
+    <div>
+      <h4><i class="material-icons expand-icon open">expand_more</i>1日目の服装</h4>
+      <div>
+        <label><input type="checkbox">1日目の私服</label>
+        <label><input type="checkbox">1日目の下着上下</label>
+        <label><input type="checkbox">1日目のキャミソールorヒートテック</label>
+        <label><input type="checkbox">1日目のストッキングorタイツ</label>
+        <label><input type="checkbox">1日目の靴下</label>
+        <label><input type="checkbox">1日目の紺パン</label>
+      </div>
+      <h4><i class="material-icons expand-icon open">expand_more</i>旅行用バックに入れるもの</h4>
+      <div>
+        <label><input type="checkbox">2日目の私服</label>
+        <label><input type="checkbox">2日目の下着上下</label>
+        <label><input type="checkbox">2日目のキャミソールorヒートテック</label>
+        <label><input type="checkbox">2日目のストッキングorタイツ</label>
+        <label><input type="checkbox">2日目の靴下</label>
+        <label><input type="checkbox">2日目の紺パン</label>
+        <label><input type="checkbox">2日目のハンドタオル</label>
+        <label><input type="checkbox">パジャマ＋ブラトップ</label>
+        <label><input type="checkbox">化粧落とし</label>
+        <label><input type="checkbox">洗顔料</label>
+        <label><input type="checkbox">泡立てネット</label>
+        <label><input type="checkbox">保湿クリーム</label>
+        <label><input type="checkbox">生理用品ポーチ</label>
+        <label><input type="checkbox">ヘアアイロン</label>
+        <label><input type="checkbox">iPhone充電器</label>
+        <label><input type="checkbox">カメラ充電器</label>
+        <label><input type="checkbox">ウォークマン充電器</label>
+        <label><input type="checkbox">シェーバー×2</label>
+        <label><input type="checkbox">ヘアブラシ</label>
+      </div>
+      <h4><i class="material-icons expand-icon open">expand_more</i>持ち歩き用バッグに入れるもの</h4>
+      <div>
+        <label><input type="checkbox">財布</label>
+        <label><input type="checkbox">家の鍵</label>
+        <label><input type="checkbox">スマホ</label>
+        <label><input type="checkbox">水筒</label>
+        <label><input type="checkbox">Suica・PASMO</label>
+        <label><input type="checkbox">ウォークマン</label>
+        <label><input type="checkbox">折り畳み傘</label>
+        <label><input type="checkbox">1日目のハンドタオル</label>
+        <label><input type="checkbox">手鏡</label>
+        <label><input type="checkbox">化粧ポーチ</label>
+        <label><input type="checkbox">生活用品ポーチ</label>
+        <label><input type="checkbox">歯ブラシ</label>
+        <label><input type="checkbox">カメラ</label>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="/static/js/belongings.js"></script>
+{% endblock %}

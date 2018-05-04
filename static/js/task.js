@@ -54,6 +54,22 @@ $(function() {
     });
   });
 
+  // 要素の開閉
+  $('.expand-icon').click(function() {
+    var hasClassOpen = $(this).hasClass('open');
+    var targetElem   = $(this).parent().next('table,span,form,div');
+
+    if (hasClassOpen) {
+      $(this).toggleClass('open');
+      $(this).text('expand_less');
+      $(targetElem).hide();
+    } else {
+      $(this).toggleClass('open');
+      $(this).text('expand_more');
+      $(targetElem).show();
+    }
+  });
+
   // 編集ボタン押下時
   $('.edit').click(function() {
     controlDialog($(this), 'edit');
