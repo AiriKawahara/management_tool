@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div style="margin: 0 20px 15px 20px;">
+  {% include "message.html" %}
+  <h4 style="margin-top: 10px;"><i class="material-icons expand-icon open">expand_more</i>登録</h4>
+  <form action="register_memo" method="post">
+    <table class="center-table input-table">
+      <tbody>
+        <tr>
+          <td class="required">メモ</td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <textarea type="text" class="mdl-textfield__input" rows="3" name="content" id="content" required></textarea>
+              <label class="mdl-textfield__label" for="content"></label>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-button">
+      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">登録</button>
+    </div>
+  </form>
+  <h4><i class="material-icons expand-icon open">expand_more</i>閲覧</h4>
+  <table class="mdl-data-table mdl-js-data-table center-table left-table">
+    <tbody>
+      {% for m in memo %}
+      <tr>
+        <td>{{ m.sort }}</td>
+        <td class="content">{{ m.content }}</td>
+        <td></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="/static/js/memo.js"></script>
+{% endblock %}

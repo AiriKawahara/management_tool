@@ -22,6 +22,11 @@ indexes:
   - name: treated_date
   - name: deadline
 
+- kind: memo
+  properties:
+  - name: sort
+  - name: content
+
 - kind: training
   properties:
   - name: training_name

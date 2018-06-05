@@ -10,6 +10,11 @@ h4 {
   margin-bottom: 0;
 }
 
+.mdl-textfield.is-invalid>textarea.mdl-textfield__input {
+  border: 1px solid rgba(0,0,0,.12);
+  border-bottom: 1px solid #d50000;
+}
+
 .nav-button {
   width: 100%;
   text-align: left;
@@ -123,6 +128,12 @@ h4 {
 
 .mdl-data-table .task_name {
   white-space: normal;
+  word-break: break-all;
+}
+
+.mdl-data-table .content {
+  white-space: normal;
+  word-break: break-all;
 }
 
 .mdl-data-table .deadline {

@@ -1,10 +1,11 @@
-from datetime import datetime, timedelta, timezone
-from flask import Flask, render_template, request, redirect, session, flash
+from datetime     import datetime, timedelta, timezone
+from flask        import Flask, render_template, request, redirect, session, flash
 from google.cloud import datastore
-from common import Common
-from task import Task
-from figure import Figure
-from blog import Blog
+from common       import Common
+from task         import Task
+from memo         import Memo
+from figure       import Figure
+from blog         import Blog
 
 app = Flask(__name__)
 app.secret_key = 'some secret key'
@@ -129,6 +130,29 @@ def treated():
     title='実績',
     tasks=results,
     categories=CATEGORIES)
+
+# メモ帳画面
+@app.route('/memo')
+def memo():
+  common = Common()
+  if not common.authentication_check():
+    return redirect('/')
+
+  memo = Memo()
+  results = memo.get_memo()
+
+  return render_template(
+    'memo.html',
+    title='メモ帳',
+    memo=results,
+    categories=CATEGORIES)
+
+# メモ登録
+@app.route('/register_memo', methods=['POST'])
+def register_memo():
+  memo = Memo()
+  memo.register_memo(request)
+  return redirect('/memo')
 
 # トレーニング画面
 @app.route('/training')

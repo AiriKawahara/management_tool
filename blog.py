@@ -112,10 +112,10 @@ class Blog:
         self.total_access += int(row[1])
         try:
           self.host_name = socket.gethostbyaddr(row[0])[0]
-          if self.host_name.endswith('.au-net.ne.jp'):
-            print(row)
-            continue
-          elif self.host_name in self.exclusion_hosts:
+          # if self.host_name.endswith('.au-net.ne.jp'):
+          #   print(row)
+          #   continue
+          if self.host_name in self.exclusion_hosts:
             print(row)
             continue
           self.other_user_access += int(row[1])
