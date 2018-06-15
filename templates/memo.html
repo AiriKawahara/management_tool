@@ -11,7 +11,7 @@
           <td class="required">メモ</td>
           <td>
             <div class="mdl-textfield mdl-js-textfield">
-              <textarea type="text" class="mdl-textfield__input" rows="3" name="content" id="content" required></textarea>
+              <textarea type="text" class="mdl-textfield__input" rows="7" name="content" id="content" required></textarea>
               <label class="mdl-textfield__label" for="content"></label>
             </div>
           </td>
@@ -26,7 +26,7 @@
   <table class="mdl-data-table mdl-js-data-table center-table left-table">
     <tbody>
       {% for m in memo %}
-      <tr>
+      <tr class="edit" data-sort="{{ m.sort }}" data-content="{{ m.content }}">
         <td>{{ m.sort }}</td>
         <td class="content">{{ m.content }}</td>
         <td></td>
@@ -34,6 +34,53 @@
       {% endfor %}
     </tbody>
   </table>
+</div>
+{% endblock %}
+
+{% block dialog %}
+<!-- メモ編集ダイアログ -->
+<div class="edit-dialog">
+  <h4>メモ編集</h4>
+  <form action="edit_memo" method="post">
+    <input type="hidden" name="sort" id="sort">
+    <table class="center-table input-table">
+      <tbody>
+        <tr>
+          <td class="required">メモ</td>
+          <td>
+            <div class="mdl-textfield mdl-js-textfield">
+              <textarea type="text" class="mdl-textfield__input" rows="7" name="content" id="dialog_content" required></textarea>
+              <label class="mdl-textfield__label" for="dialog_content"></label>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-button">
+      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">編集</button>
+    </div>
+  </form>
+</div>
+
+<!-- メモ削除確認ダイアログ -->
+<div class="delete-dialog">
+  <p>メモを削除します。よろしいですか？</p>
+  <form action="delete_task" method="post">
+    <input type="hidden" name="task_name" id="task_name">
+    <input type="hidden" name="deadline" id="deadline">
+    <table class="center-table">
+      <tbody>
+        <tr>
+          <td>
+            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">はい</button>
+          </td>
+          <td>
+            <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored dialog-close">いいえ</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
 </div>
 {% endblock %}
 
