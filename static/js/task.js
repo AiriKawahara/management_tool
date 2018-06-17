@@ -155,9 +155,9 @@ function controlDialog($elem, type) {
   var taskName = $elem.data('name');
   var deadline = $elem.data('deadline');
 
-  //キーボード操作などにより、オーバーレイが多重起動するのを防止する
-  $elem.blur();  //ボタンからフォーカスを外す
-  if($('#overlay')[0]) return false;   //新しくモーダルウィンドウを起動しない (防止策1)
+  // キーボード操作などにより、オーバーレイが多重起動するのを防止する
+  $elem.blur();  // ボタンからフォーカスを外す
+  if($('#overlay')[0]) return false;   // 新しくモーダルウィンドウを起動しない (防止策1)
 
   //オーバーレイを出現させる
   $('body').append('<div id="overlay"></div>');

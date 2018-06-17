@@ -10,6 +10,11 @@ $(function() {
   $('.edit').click(function() {
     controlDialog($(this), 'edit');
   });
+
+  // 削除ボタン押下時
+  $('.delete').click(function() {
+
+  });
 });
 
 /**

@@ -29,7 +29,17 @@
       <tr class="edit" data-sort="{{ m.sort }}" data-content="{{ m.content }}">
         <td>{{ m.sort }}</td>
         <td class="content">{{ m.content }}</td>
-        <td></td>
+        <td>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised delete" data-sort="{{ m.sort }}">
+            <i class="material-icons">arrow_upward</i>
+          </button>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised delete" data-sort="{{ m.sort }}">
+            <i class="material-icons">arrow_downward</i>
+          </button>
+          <button type="button" class="mdl-button mdl-js-button mdl-button--raised delete" data-sort="{{ m.sort }}">
+            <i class="material-icons">delete</i>
+          </button>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
