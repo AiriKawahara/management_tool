@@ -77,9 +77,13 @@ def task():
   else:
     search_tasks = []
 
+  total_task_count = len(everyday_tasks) + len(expired_tasks) \
+    + len(danger_tasks) + len(other_tasks)
+
   return render_template(
     'task.html',
     title='タスク管理',
+    total_task_count=total_task_count,
     everyday_tasks=everyday_tasks,
     expired_tasks=expired_tasks,
     danger_tasks=danger_tasks,

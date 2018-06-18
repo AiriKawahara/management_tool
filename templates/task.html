@@ -40,7 +40,7 @@
     </div>
   </form>
 
-  <h4><i class="material-icons expand-icon reading open">expand_more</i>閲覧</h4>
+  <h4><i class="material-icons expand-icon reading open">expand_more</i>閲覧 <span class="sub-title">全タスク数：{{ total_task_count }}</span></h4>
   <div>
     <h6><i class="material-icons expand-icon open">expand_more</i>毎日のタスク<span class="sub-title">タスク数：{{ everyday_tasks|length }}</span></h6>
     {% if everyday_tasks|length != 0 %}
